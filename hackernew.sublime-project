@@ -1,0 +1,24 @@
+{
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				".bloop",
+				".g8",
+				".bloop"
+			],
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"LSP":
+		{
+			"metals-sublime":
+			{
+				"enabled": true
+			}
+		}
+	}
+}
