@@ -8,7 +8,9 @@ object Deps {
   val scalaTestVersion = "3.0.4"
   val avroSerializerVersion = "4.0.0"
   val slickVersion = "3.3.2"
-  val scalaForkLiftVersion= "0.3.1"
+  val scalaForkLiftVersion = "0.3.1"
+  val flywayVersion = "5.4.0"
+  val slickMigrationFlywayVersion = "0.6.0"
   lazy val avro = "org.apache.avro" % "avro" % avroVersion
   lazy val avroSerializer = "io.confluent" % "kafka-avro-serializer" % avroSerializerVersion
   lazy val avroStreamsSerializer = "io.confluent" % "kafka-streams-avro-serde" % avroSerializerVersion
@@ -27,4 +29,6 @@ object Deps {
 
   lazy val scalaTestPlay = "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test
   lazy val scalaForkLift = "com.liyaos" %% "scala-forklift-slick" % scalaForkLiftVersion
+  lazy val flyway = "org.flywaydb" %% "flyway-play" % flywayVersion
+  lazy val slickMigrationFlyway = "io.github.nafg" %% "slick-migration-api-flyway" % slickMigrationFlywayVersion
 }

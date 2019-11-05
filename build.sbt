@@ -1,5 +1,6 @@
 import Deps._
 resolvers += Resolver.jcenterRepo
+resolvers += Resolver.bintrayRepo("naftoligug", "maven")
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
   .settings(
@@ -17,7 +18,8 @@ lazy val root = (project in file("."))
           h2,
           mysql,
           scalaTestPlay,
-          scalaForkLift
+          flyway,
+          slickMigrationFlyway
         )
       )
     )
