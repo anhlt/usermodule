@@ -7,10 +7,6 @@ import slick.migration.api.flyway.UnmanagedDatabase
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.migration.BaseJavaMigration
 import org.flywaydb.core.api.migration.Context
-import scala.concurrent.duration._
-import scala.concurrent.Await
-
-
 
 class V3__scala_test extends BaseJavaMigration {
 

@@ -8,12 +8,11 @@ import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.migration.BaseJavaMigration
 import org.flywaydb.core.api.migration.Context
 
-
-class V2__scala_migrate extends BaseJavaMigration {
+class V2_2__new extends BaseJavaMigration {
 
   lazy val db = Database.forConfig("db.default")
 
-  class TestTable(tag: Tag) extends Table[(Int, Int)](tag, "testtable") {
+  class TestTable(tag: Tag) extends Table[(Int, Int)](tag, "testtable3") {
     val col1 = column[Int]("col1")
     val col2 = column[Int]("col2")
     def * = (col1, col2)

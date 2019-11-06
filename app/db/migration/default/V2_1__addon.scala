@@ -1,7 +1,5 @@
 package db.migration.default
 
-package db.migration.default
-
 import slick.jdbc.MySQLProfile.api._
 import slick.migration.api._
 import slick.migration.api.flyway._
@@ -9,10 +7,6 @@ import slick.migration.api.flyway.UnmanagedDatabase
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.migration.BaseJavaMigration
 import org.flywaydb.core.api.migration.Context
-import scala.concurrent.duration._
-import scala.concurrent.Await
-
-
 
 class V2_1__scala_addon extends BaseJavaMigration {
 
