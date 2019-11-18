@@ -1,9 +1,13 @@
 package controllers
 
+import controllers.socket._
 import javax.inject._
 import play.api._
 import play.api.mvc._
 import authenticate.TokenAuthenticateAction
+import play.api.libs.streams.ActorFlow
+import akka.actor.ActorSystem
+import akka.stream.Materializer
 
 /**
   * This controller creates an `Action` to handle HTTP requests to the
@@ -11,6 +15,8 @@ import authenticate.TokenAuthenticateAction
   */
 @Singleton
 class HomeController @Inject()(
+    implicit system: ActorSystem,
+    mat: Materializer,
     tokenAuthenticateAction: TokenAuthenticateAction,
     cc: ControllerComponents
 ) extends AbstractController(cc) {
@@ -24,6 +30,13 @@ class HomeController @Inject()(
     */
   def index() = tokenAuthenticateAction {
     implicit request: Request[AnyContent] =>
+      val test = Set.empty[Int]
       Ok(views.html.index())
+  }
+
+  def socket = WebSocket.accept[String, String] { request =>
+    ActorFlow.actorRef({ out =>
+      IotSocketActor.props(out)
+    })
   }
 }

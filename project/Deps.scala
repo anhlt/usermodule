@@ -11,6 +11,10 @@ object Deps {
   val scalaForkLiftVersion = "0.3.1"
   val flywayVersion = "5.4.0"
   val slickMigrationFlywayVersion = "0.6.0"
+  val mqttVersion = "1.2.2"
+  val playVersion ="2.7.3"
+
+
   lazy val avro = "org.apache.avro" % "avro" % avroVersion
   lazy val avroSerializer = "io.confluent" % "kafka-avro-serializer" % avroSerializerVersion
   lazy val avroStreamsSerializer = "io.confluent" % "kafka-streams-avro-serde" % avroSerializerVersion
@@ -26,6 +30,8 @@ object Deps {
   lazy val h2 = "com.h2database" % "h2" % "1.4.191"
   lazy val mysql = "mysql" % "mysql-connector-java" % "5.1.47"
   lazy val avro4s = "com.sksamuel.avro4s" %% "avro4s-core" % "2.0.4"
+  lazy val mqtt = "org.eclipse.paho" % "org.eclipse.paho.client.mqttv3" % mqttVersion
+  lazy val play = "com.typesafe.play" %% "play" % playVersion
 
   lazy val scalaTestPlay = "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test
   lazy val scalaForkLift = "com.liyaos" %% "scala-forklift-slick" % scalaForkLiftVersion

@@ -11,6 +11,7 @@ lazy val root = (project in file("."))
         organization := "h3ck3rn3w.io",
         version := "1.0",
         libraryDependencies ++= Seq(
+          play,
           guice,
           slick,
           slickHikaricp,
@@ -19,6 +20,7 @@ lazy val root = (project in file("."))
           mysql,
           scalaTestPlay,
           flyway,
+          mqtt,
           slickMigrationFlyway
         )
       )
