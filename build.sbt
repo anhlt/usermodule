@@ -24,7 +24,9 @@ lazy val root = (project in file("."))
           slickMigrationFlyway
         )
       )
-    )
+    ),
+    fork in (Compile, run) := true,
+    javaOptions in (Compile, run) += "-Dhttp.address=0.0.0.0"
   )
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "h3ck3rn3w.io.controllers._"

@@ -15,6 +15,10 @@
 	{
 		"LSP":
 		{
+			"metals":
+			{
+				"enabled": true
+			},
 			"metals-sublime":
 			{
 				"enabled": true
