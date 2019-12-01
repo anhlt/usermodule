@@ -15,13 +15,23 @@ lazy val root = (project in file("."))
           guice,
           slick,
           slickHikaricp,
+          jodaMapper,
+          jodaConvert,
+          jodaTime,
           jdbc,
           h2,
           mysql,
           scalaTestPlay,
           flyway,
           mqtt,
-          slickMigrationFlyway
+          oauth2Core,
+          oauth2Provider,
+          slickMigrationFlyway,
+          silhouette,
+          silhouetteBcrypt,
+          silhouetteCrypto,
+          silhouettePersistence,
+          silhouetteTotp
         )
       )
     ),

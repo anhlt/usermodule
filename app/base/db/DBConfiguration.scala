@@ -1,6 +1,7 @@
 package base.db
 
 import slick.jdbc.JdbcProfile
+import com.github.tototoshi.slick.GenericJodaSupport
 
 trait DBConfiguration {
 

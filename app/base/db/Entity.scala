@@ -1,12 +1,12 @@
 package base.db
 
-import java.sql.Timestamp
+import org.joda.time.DateTime
 
 trait Entity {
   def id: Option[Long]
 
-  def created: Timestamp
+  def createdAt: DateTime
 
-  def updated: Timestamp
+  def updatedAt: DateTime
 
 }

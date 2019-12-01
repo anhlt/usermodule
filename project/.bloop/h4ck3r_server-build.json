@@ -28,7 +28,7 @@
             "/home/anh/.ivy2/cache/org.typelevel/cats-kernel_2.12/jars/cats-kernel_2.12-1.0.1.jar",
             "/home/anh/.ivy2/cache/org.spire-math/jawn-parser_2.12/jars/jawn-parser_2.12-0.11.1.jar",
             "/home/anh/.ivy2/cache/io.circe/circe-derivation_2.12/jars/circe-derivation_2.12-0.9.0-M3.jar",
-            "/home/anh/.ivy2/cache/scala_2.12/sbt_1.0/org.scalameta/sbt-metals/jars/sbt-metals-0.7.0.jar",
+            "/home/anh/.ivy2/cache/scala_2.12/sbt_1.0/org.scalameta/sbt-metals/jars/sbt-metals-0.7.6.jar",
             "/home/anh/.ivy2/cache/scala_2.12/sbt_1.0/com.typesafe.play/sbt-plugin/jars/sbt-plugin-2.7.3.jar",
             "/home/anh/.ivy2/cache/com.typesafe.play/sbt-routes-compiler_2.12/jars/sbt-routes-compiler_2.12-2.7.3.jar",
             "/home/anh/.ivy2/cache/com.typesafe.play/twirl-api_2.12/jars/twirl-api_2.12-1.4.2.jar",
@@ -269,7 +269,7 @@
         "platform" : {
             "name" : "jvm",
             "config" : {
-                "home" : "/usr/lib/jvm/java-11-openjdk-amd64",
+                "home" : "/usr/lib/jvm/java-8-openjdk-amd64/jre",
                 "options" : [
                 ]
             },
@@ -435,11 +435,11 @@
                 {
                     "organization" : "org.scalameta",
                     "name" : "sbt-metals",
-                    "version" : "0.7.0",
+                    "version" : "0.7.6",
                     "artifacts" : [
                         {
                             "name" : "sbt-metals",
-                            "path" : "/home/anh/.ivy2/cache/scala_2.12/sbt_1.0/org.scalameta/sbt-metals/jars/sbt-metals-0.7.0.jar"
+                            "path" : "/home/anh/.ivy2/cache/scala_2.12/sbt_1.0/org.scalameta/sbt-metals/jars/sbt-metals-0.7.6.jar"
                         }
                     ]
                 },

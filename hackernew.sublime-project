@@ -17,7 +17,7 @@
 		{
 			"metals":
 			{
-				"enabled": true
+				"enabled": false
 			},
 			"metals-sublime":
 			{

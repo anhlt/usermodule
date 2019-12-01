@@ -1,8 +1,8 @@
 package base.db
 
-import java.sql.Timestamp
-
+import org.joda.time.DateTime
 import slick.lifted
+import com.github.tototoshi.slick.GenericJodaSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
@@ -23,7 +23,11 @@ trait TableDefinition {
   val dbConfiguration: DBConfiguration
   val db = dbConfiguration.db
 
+  object jodaSupport extends GenericJodaSupport(dbConfiguration.driver)
+
   import dbConfiguration.driver.api._
+  import slick.lifted._
+  import jodaSupport._
 
   /**
     * The [[BaseTable]] describes the basic [[Entity]]
@@ -34,9 +38,15 @@ trait TableDefinition {
       schemaName: Option[String] = None
   ) extends Table[E](tag, schemaName, tableName) {
 
-    val id = column[Long]("id", O.PrimaryKey)
-    val created = column[Timestamp]("created_date")
-    val updated = column[Timestamp]("updated_date")
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+    val createdAt = column[DateTime](
+      "created_date",
+      O.Default(DateTime.now())
+    )
+    val updatedAt = column[DateTime](
+      "updated_date",
+      O.Default(DateTime.now())
+    )
   }
   /**
   * The root basic repository definition
