@@ -1,6 +1,6 @@
-package models.entities
+package db
 import org.joda.time.DateTime
-import base.db.Entity
+import db.base.Entity
 
 case class DBAccount(
     id: Option[Long],

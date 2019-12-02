@@ -1,4 +1,4 @@
-package base.db
+package db.base
 
 import slick.jdbc.JdbcProfile
 import com.github.tototoshi.slick.GenericJodaSupport

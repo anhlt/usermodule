@@ -1,4 +1,4 @@
-package base.db
+package db.base
 
 import org.joda.time.DateTime
 

@@ -1,18 +1,7 @@
 package db
 import com.github.tototoshi.slick.GenericJodaSupport
-import models.entities.{
-  DBAccount,
-  DBOauthClient,
-  DBOAuthAccessToken,
-  DBOauthAuthorizationCode,
-  DBLoginInfo,
-  DBUserLoginInfo,
-  DBPasswordInfo,
-  DBOAuth1Info,
-  DBOAuth2Info
-}
 
-import base.db.{DBConfiguration, TableDefinition}
+import db.base.{DBConfiguration, TableDefinition}
 import org.joda.time._
 
 class OauthTableDefinitions(
