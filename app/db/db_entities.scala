@@ -2,11 +2,11 @@ package db
 import org.joda.time.DateTime
 import db.base.Entity
 
-case class DBAccount(
+case class DBUser(
     id: Option[Long],
     email: String,
-    updatedAt: DateTime,
-    createdAt: DateTime
+    updatedAt: DateTime = new DateTime(),
+    createdAt: DateTime = new DateTime()
 ) extends Entity
 
 case class DBOAuthAccessToken(
@@ -44,26 +44,26 @@ case class DBLoginInfo(
     id: Option[Long],
     providerID: String,
     providerKey: String,
-    updatedAt: DateTime,
-    createdAt: DateTime
+    updatedAt: DateTime = new DateTime(),
+    createdAt: DateTime = new DateTime()
 ) extends Entity
 
 case class DBUserLoginInfo(
     id: Option[Long],
-    userID: String,
+    userID: Long,
     loginInfoId: Long,
-    updatedAt: DateTime,
-    createdAt: DateTime
+    updatedAt: DateTime = new DateTime(),
+    createdAt: DateTime = new DateTime()
 ) extends Entity
 
+
 case class DBPasswordInfo(
-    id: Option[Long],
     hasher: String,
     password: String,
     salt: Option[String],
     loginInfoId: Long,
-    updatedAt: DateTime,
-    createdAt: DateTime
+    updatedAt: DateTime = new DateTime(),
+    createdAt: DateTime = new DateTime()
 ) extends Entity
 
 case class DBOAuth1Info(

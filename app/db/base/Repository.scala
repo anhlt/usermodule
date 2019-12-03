@@ -8,6 +8,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
 
 trait Repository[E <: Entity] {
+
   def all: Future[Seq[E]]
 
   def byId(id: Long): Future[Option[E]]
@@ -65,7 +66,7 @@ trait Repositories {
 
     val db: Database = tableDefinition.dbConfiguration.db
 
-    def table: lifted.TableQuery[T]
+    val table: lifted.TableQuery[T]
 
     override def all: Future[Seq[E]] = db.run {
       table.to[Seq].result

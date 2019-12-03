@@ -13,7 +13,7 @@ import com.github.tototoshi.slick.MySQLJodaSupport._
 import scala.reflect.ClassTag
 
 import db.{
-  DBAccount,
+  DBUser,
   DBOauthClient,
   DBOAuthAccessToken,
   DBOauthAuthorizationCode,
@@ -47,7 +47,7 @@ class V1_2__new extends BaseJavaMigration {
     )
   }
 
-  class UserTable(tag: Tag) extends BaseTable[DBAccount](tag, "users") {
+  class UserTable(tag: Tag) extends BaseTable[DBUser](tag, "users") {
 
     val email = column[String]("email")
 
@@ -57,7 +57,7 @@ class V1_2__new extends BaseJavaMigration {
         email,
         createdAt,
         updatedAt
-      ) <> (DBAccount.tupled, DBAccount.unapply _)
+      ) <> (DBUser.tupled, DBUser.unapply _)
   }
 
   class OauthClientTable(tag: Tag)
@@ -134,7 +134,7 @@ class V1_2__new extends BaseJavaMigration {
 
   class UserLoginInfos(tag: Tag)
       extends BaseTable[DBUserLoginInfo](tag, "userlogininfo") {
-    def userID = column[String]("userID")
+    def userID = column[Long]("userID")
     def loginInfoId = column[Long]("loginInfoId")
     def * =
       (id.?, userID, loginInfoId, createdAt, updatedAt) <> (DBUserLoginInfo.tupled, DBUserLoginInfo.unapply)
@@ -147,7 +147,7 @@ class V1_2__new extends BaseJavaMigration {
     def salt = column[Option[String]]("salt")
     def loginInfoId = column[Long]("loginInfoId")
     def * =
-      (id.?, hasher, password, salt, loginInfoId, createdAt, updatedAt) <> (DBPasswordInfo.tupled, DBPasswordInfo.unapply)
+      (hasher, password, salt, loginInfoId, createdAt, updatedAt) <> (DBPasswordInfo.tupled, DBPasswordInfo.unapply)
   }
 
   class OAuth1Infos(tag: Tag)

@@ -3,8 +3,9 @@ import com.github.tototoshi.slick.GenericJodaSupport
 
 import db.base.{DBConfiguration, TableDefinition}
 import org.joda.time._
+import com.mohiva.play.silhouette.api.LoginInfo
 
-class OauthTableDefinitions(
+class TableDefinitions(
     override val dbConfiguration: DBConfiguration
 ) extends TableDefinition {
 
@@ -12,7 +13,7 @@ class OauthTableDefinitions(
   import dbConfiguration.driver.api._
   import PortableJodaSupport._
 
-  class UserTable(tag: Tag) extends BaseTable[DBAccount](tag, "users") {
+  class UserTable(tag: Tag) extends BaseTable[DBUser](tag, "users") {
 
     val email = column[String]("email")
 
@@ -22,7 +23,7 @@ class OauthTableDefinitions(
         email,
         createdAt,
         updatedAt
-      ) <> (DBAccount.tupled, DBAccount.unapply _)
+      ) <> (DBUser.tupled, DBUser.unapply _)
   }
 
   class OauthClientTable(tag: Tag)
@@ -99,7 +100,7 @@ class OauthTableDefinitions(
 
   class UserLoginInfos(tag: Tag)
       extends BaseTable[DBUserLoginInfo](tag, "userlogininfo") {
-    def userID = column[String]("userID")
+    def userID = column[Long]("userID")
     def loginInfoId = column[Long]("loginInfoId")
     def * =
       (id.?, userID, loginInfoId, createdAt, updatedAt) <> (DBUserLoginInfo.tupled, DBUserLoginInfo.unapply)
@@ -112,7 +113,7 @@ class OauthTableDefinitions(
     def salt = column[Option[String]]("salt")
     def loginInfoId = column[Long]("loginInfoId")
     def * =
-      (id.?, hasher, password, salt, loginInfoId, createdAt, updatedAt) <> (DBPasswordInfo.tupled, DBPasswordInfo.unapply)
+      (hasher, password, salt, loginInfoId, createdAt, updatedAt) <> (DBPasswordInfo.tupled, DBPasswordInfo.unapply)
   }
 
   class OAuth1Infos(tag: Tag)
@@ -144,4 +145,17 @@ class OauthTableDefinitions(
       ) <> (DBOAuth2Info.tupled, DBOAuth2Info.unapply)
   }
 
+  // table query definitions
+  val slickUsers = TableQuery[UserTable]
+  val slickLoginInfos = TableQuery[LoginInfos]
+  val slickUserLoginInfos = TableQuery[UserLoginInfos]
+  val slickPasswordInfos = TableQuery[PasswordInfos]
+  val slickOAuth1Infos = TableQuery[OAuth1Infos]
+  val slickOAuth2Infos = TableQuery[OAuth2Infos]
+
+  def loginInfoQuery(loginInfo: LoginInfo) =
+    slickLoginInfos.filter(
+      dbLoginInfo =>
+        dbLoginInfo.providerID === loginInfo.providerID && dbLoginInfo.providerKey === loginInfo.providerKey
+    )
 }
