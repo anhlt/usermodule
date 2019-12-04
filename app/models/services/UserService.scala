@@ -85,7 +85,8 @@ class UserServiceImpl @Inject()(userRepository: UserRepository)(
           User(
             None,
             loginInfo = profile.loginInfo,
-            email = profile.email
+            email = profile.email,
+            activated = false
           )
         )
     }

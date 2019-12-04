@@ -1,6 +1,6 @@
 package controllers
 
-import controllers.socket._
+import socket.IotSocketActor
 import javax.inject._
 import play.api._
 import play.api.mvc._

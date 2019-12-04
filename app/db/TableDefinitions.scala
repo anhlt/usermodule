@@ -4,8 +4,9 @@ import com.github.tototoshi.slick.GenericJodaSupport
 import db.base.{DBConfiguration, TableDefinition}
 import org.joda.time._
 import com.mohiva.play.silhouette.api.LoginInfo
+import com.google.inject._
 
-class TableDefinitions(
+class TableDefinitions @Inject()(
     override val dbConfiguration: DBConfiguration
 ) extends TableDefinition {
 
@@ -16,11 +17,13 @@ class TableDefinitions(
   class UserTable(tag: Tag) extends BaseTable[DBUser](tag, "users") {
 
     val email = column[String]("email")
+    val activated = column[Boolean]("activated")
 
     def * =
       (
         id.?,
         email,
+        activated,
         createdAt,
         updatedAt
       ) <> (DBUser.tupled, DBUser.unapply _)

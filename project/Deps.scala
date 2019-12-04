@@ -13,9 +13,8 @@ object Deps {
   val flywayVersion = "5.4.0"
   val slickMigrationFlywayVersion = "0.6.0"
   val mqttVersion = "1.2.2"
-  val playVersion ="2.7.3"
+  val playVersion = "2.7.3"
   val silhouetteVersion = "6.1.0"
-
 
   lazy val avro = "org.apache.avro" % "avro" % avroVersion
   lazy val avroSerializer = "io.confluent" % "kafka-avro-serializer" % avroSerializerVersion
@@ -28,7 +27,7 @@ object Deps {
   lazy val scalariform = "org.scalariform" %% "scalariform" % "0.2.10"
   lazy val slick = "com.typesafe.slick" %% "slick" % slickVersion
   lazy val slickHikaricp = "com.typesafe.slick" %% "slick-hikaricp" % slickVersion
-  lazy val jodaMapper =  "com.github.tototoshi" %% "slick-joda-mapper" % slickJodaMapperVersion
+  lazy val jodaMapper = "com.github.tototoshi" %% "slick-joda-mapper" % slickJodaMapperVersion
   lazy val jodaTime = "joda-time" % "joda-time" % "2.7"
   lazy val jodaConvert = "org.joda" % "joda-convert" % "1.7"
   lazy val typesafeConfig = "com.typesafe" % "config" % "1.3.4"
@@ -41,12 +40,13 @@ object Deps {
   lazy val silhouetteBcrypt = "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion
   lazy val silhouettePersistence = "com.mohiva" %% "play-silhouette-persistence" % silhouetteVersion
   lazy val silhouetteCrypto = "com.mohiva" %% "play-silhouette-crypto-jca" % silhouetteVersion
-  lazy val silhouetteTotp =  "com.mohiva" %% "play-silhouette-totp" % silhouetteVersion
+  lazy val silhouetteTotp = "com.mohiva" %% "play-silhouette-totp" % silhouetteVersion
   lazy val scalaTestPlay = "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test
   lazy val scalaForkLift = "com.liyaos" %% "scala-forklift-slick" % scalaForkLiftVersion
   lazy val flyway = "org.flywaydb" %% "flyway-play" % flywayVersion
   lazy val slickMigrationFlyway = "io.github.nafg" %% "slick-migration-api-flyway" % slickMigrationFlywayVersion
-
-  lazy val oauth2Core =  "com.nulab-inc" %% "scala-oauth2-core" % "1.4.0"
-  lazy val oauth2Provider =  "com.nulab-inc" %% "play2-oauth2-provider" % "1.4.2"
+  lazy val ficus = "com.iheart" %% "ficus" % "1.4.7"
+  lazy val oauth2Core = "com.nulab-inc" %% "scala-oauth2-core" % "1.4.0"
+  lazy val oauth2Provider = "com.nulab-inc" %% "play2-oauth2-provider" % "1.4.2"
+  lazy val bs3 =  "com.adrianhurt" %% "play-bootstrap3" % "1.5.1-P27-B3"
 }

@@ -5,6 +5,7 @@ import db.base.Entity
 case class DBUser(
     id: Option[Long],
     email: String,
+    activated: Boolean = false,
     updatedAt: DateTime = new DateTime(),
     createdAt: DateTime = new DateTime()
 ) extends Entity
@@ -55,7 +56,6 @@ case class DBUserLoginInfo(
     updatedAt: DateTime = new DateTime(),
     createdAt: DateTime = new DateTime()
 ) extends Entity
-
 
 case class DBPasswordInfo(
     hasher: String,

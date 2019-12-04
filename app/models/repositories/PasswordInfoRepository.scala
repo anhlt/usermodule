@@ -14,11 +14,13 @@ import db.{DBUser, DBLoginInfo, DBUserLoginInfo, DBPasswordInfo}
 
 class PasswordInfoRepository @Inject()(
     val tableDefinations: TableDefinitions,
-    implicit val ex: ExecutionContext,
+    ex: ExecutionContext
+)(
     implicit
     val classTag: ClassTag[PasswordInfo]
 ) extends DelegableAuthInfoDAO[PasswordInfo] {
 
+  implicit val exc = ex
   import tableDefinations._
   import tableDefinations.dbConfiguration.driver.api._
 

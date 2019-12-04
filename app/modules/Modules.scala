@@ -39,7 +39,10 @@ import com.mohiva.play.silhouette.password.{
 }
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
-
+import net.ceedubs.ficus.Ficus._
+import net.ceedubs.ficus.readers.ArbitraryTypeReader._
+import net.ceedubs.ficus.readers.EnumerationReader._
+import net.ceedubs.ficus.readers.ValueReader
 import com.typesafe.config.{Config}
 import models.repositories.{
   UserRepository,
@@ -54,22 +57,74 @@ import play.api.mvc.Cookie
 import utils.auth.DefaultEnv
 import models.services.{UserService, UserServiceImpl}
 import scala.concurrent.ExecutionContext.Implicits.global
+import db.base.DBConfiguration
+import db.TableDefinitions
+import akka.actor.ActorSystem
+import scala.concurrent.ExecutionContext
 
 class SilhouetteModule extends AbstractModule {
 
   override def configure(): Unit = {
-
+    bind(classOf[ActorSystem]).toInstance(ActorSystem.create())
     bind(classOf[Silhouette[DefaultEnv]])
       .to(classOf[SilhouetteProvider[DefaultEnv]])
     bind(classOf[UserService]).to(classOf[UserServiceImpl])
     bind(classOf[UserRepository]).to(classOf[UserRepositoryImp])
     bind(classOf[IDGenerator]).toInstance(new SecureRandomIDGenerator())
-    bind(classOf[FingerprintGenerator]).toInstance(new DefaultFingerprintGenerator())
+    bind(classOf[FingerprintGenerator])
+      .toInstance(new DefaultFingerprintGenerator())
     bind(classOf[EventBus]).toInstance(EventBus())
     bind(classOf[Clock]).toInstance(Clock())
 
+    bind(classOf[DBConfiguration]).toInstance(new DBConfiguration {
+      override val driver = slick.jdbc.MySQLProfile
+    })
+    bind(classOf[TableDefinitions])
 
+  }
+  @Provides
+  def provideSqlEC(actorSystem: ActorSystem): ExecutionContext = {
+    actorSystem.dispatchers.lookup("my-dispatcher")
+  }
+  @Provides
+  def providePasswordInfo(
+      tableDefinition: TableDefinitions,
+      exc: ExecutionContext
+  ): DelegableAuthInfoDAO[PasswordInfo] = {
+    new PasswordInfoRepository(tableDefinition, exc)
+  }
 
+  @Provides
+  def provideHTTPLayer(client: WSClient): HTTPLayer = new PlayHTTPLayer(client)
+
+  @Provides
+  def provideEnvironment(
+      userService: UserService,
+      authenticatorService: AuthenticatorService[JWTAuthenticator],
+      eventBus: EventBus
+  ): Environment[DefaultEnv] = {
+
+    Environment[DefaultEnv](
+      userService,
+      authenticatorService,
+      Seq(),
+      eventBus
+    )
+  }
+
+  @Provides
+  def provideAuthenticatorService(
+      @Named("authenticator-crypter") crypter: Crypter,
+      idGenerator: IDGenerator,
+      configuration: Configuration,
+      clock: Clock
+  ): AuthenticatorService[JWTAuthenticator] = {
+
+    val config = configuration.underlying
+      .as[JWTAuthenticatorSettings]("silhouette.authenticator")
+    val encoder = new CrypterAuthenticatorEncoder(crypter)
+
+    new JWTAuthenticatorService(config, None, encoder, idGenerator, clock)
   }
 
 }

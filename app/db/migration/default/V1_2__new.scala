@@ -50,11 +50,13 @@ class V1_2__new extends BaseJavaMigration {
   class UserTable(tag: Tag) extends BaseTable[DBUser](tag, "users") {
 
     val email = column[String]("email")
+    val activated = column[Boolean]("activated")
 
     def * =
       (
         id.?,
         email,
+        activated,
         createdAt,
         updatedAt
       ) <> (DBUser.tupled, DBUser.unapply _)
@@ -192,6 +194,7 @@ class V1_2__new extends BaseJavaMigration {
   val m1 = TableMigration(userTable).create.addColumns(
     _.id,
     _.email,
+    _.activated,
     _.createdAt,
     _.updatedAt
   )

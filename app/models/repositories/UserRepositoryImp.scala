@@ -43,7 +43,8 @@ class UserRepositoryImp @Inject()(
         User(
           user.id,
           loginInfo,
-          Some(user.email)
+          Some(user.email),
+          user.activated
         )
       }
     }
@@ -69,7 +70,8 @@ class UserRepositoryImp @Inject()(
           User(
             user.id,
             LoginInfo(loginInfo.providerID, loginInfo.providerKey),
-            Some(user.email)
+            Some(user.email),
+            user.activated
           )
       }
     }
