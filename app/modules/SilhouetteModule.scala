@@ -31,6 +31,8 @@ import com.mohiva.play.silhouette.impl.providers.state.{
   CsrfStateItemHandler,
   CsrfStateSettings
 }
+import com.mohiva.play.silhouette.api.actions._
+
 import com.mohiva.play.silhouette.impl.services._
 import com.mohiva.play.silhouette.impl.util._
 import com.mohiva.play.silhouette.password.{
@@ -65,9 +67,6 @@ import scala.concurrent.ExecutionContext
 class SilhouetteModule extends AbstractModule {
 
   override def configure(): Unit = {
-    bind(classOf[ActorSystem]).toInstance(ActorSystem.create())
-    bind(classOf[Silhouette[DefaultEnv]])
-      .to(classOf[SilhouetteProvider[DefaultEnv]])
     bind(classOf[UserService]).to(classOf[UserServiceImpl])
     bind(classOf[UserRepository]).to(classOf[UserRepositoryImp])
     bind(classOf[IDGenerator]).toInstance(new SecureRandomIDGenerator())
@@ -83,8 +82,18 @@ class SilhouetteModule extends AbstractModule {
 
   }
   @Provides
-  def provideSqlEC(actorSystem: ActorSystem): ExecutionContext = {
-    actorSystem.dispatchers.lookup("my-dispatcher")
+  def provideSilhouette(
+      env: Environment[DefaultEnv],
+      securedAction: SecuredAction,
+      unsecuredAction: UnsecuredAction,
+      userAwareAction: UserAwareAction
+  ): Silhouette[DefaultEnv] = {
+    new SilhouetteProvider[DefaultEnv](
+      env,
+      securedAction,
+      unsecuredAction,
+      userAwareAction
+    )
   }
   @Provides
   def providePasswordInfo(
@@ -111,7 +120,14 @@ class SilhouetteModule extends AbstractModule {
       eventBus
     )
   }
+  @Provides
+  @Named("authenticator-crypter")
+  def provideAuthenticatorCrypter(configuration: Configuration): Crypter = {
+    val config = configuration.underlying
+      .as[JcaCrypterSettings]("silhouette.authenticator.crypter")
 
+    new JcaCrypter(config)
+  }
   @Provides
   def provideAuthenticatorService(
       @Named("authenticator-crypter") crypter: Crypter,
