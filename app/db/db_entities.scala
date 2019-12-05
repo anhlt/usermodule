@@ -1,6 +1,7 @@
 package db
 import org.joda.time.DateTime
 import db.base.Entity
+import java.util.UUID
 
 case class DBUser(
     id: Option[Long],
@@ -9,6 +10,8 @@ case class DBUser(
     updatedAt: DateTime = new DateTime(),
     createdAt: DateTime = new DateTime()
 ) extends Entity
+
+case class AuthToken(token: UUID, userID: Long, expiry: DateTime)
 
 case class DBOAuthAccessToken(
     id: Option[Long],

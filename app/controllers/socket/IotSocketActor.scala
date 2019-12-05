@@ -12,7 +12,6 @@ class IotSocketActor(out: ActorRef) extends Actor {
 
   override def receive: Receive = {
     case message: String =>
-      play.Logger.debug(s"Message: ${message}")
       out ! ("I received your message: " + message)
     // out ! message
   }

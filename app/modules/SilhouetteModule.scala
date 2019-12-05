@@ -57,7 +57,12 @@ import play.api.{Configuration}
 import play.api.libs.ws.WSClient
 import play.api.mvc.Cookie
 import utils.auth.DefaultEnv
-import models.services.{UserService, UserServiceImpl}
+import models.services.{
+  UserService,
+  UserServiceImpl,
+  AuthTokenService,
+  AuthTokenServiceImpl
+}
 import scala.concurrent.ExecutionContext.Implicits.global
 import db.base.DBConfiguration
 import db.TableDefinitions
@@ -79,6 +84,7 @@ class SilhouetteModule extends AbstractModule {
       override val driver = slick.jdbc.MySQLProfile
     })
     bind(classOf[TableDefinitions])
+    bind(classOf[AuthTokenService]).to(classOf[AuthTokenServiceImpl])
 
   }
   @Provides
@@ -141,6 +147,28 @@ class SilhouetteModule extends AbstractModule {
     val encoder = new CrypterAuthenticatorEncoder(crypter)
 
     new JWTAuthenticatorService(config, None, encoder, idGenerator, clock)
+  }
+
+  @Provides
+  def provideAuthInfoRepository(
+      passwordInfoDAO: DelegableAuthInfoDAO[PasswordInfo]
+      // oauth1InfoDAO: DelegableAuthInfoDAO[OAuth1Info],
+      // oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info]
+  ): AuthInfoRepository = {
+
+    new DelegableAuthInfoRepository(
+      passwordInfoDAO
+      // oauth1InfoDAO,
+      // oauth2InfoDAO
+    )
+  }
+
+  @Provides
+  def providePasswordHasherRegistry(): PasswordHasherRegistry = {
+    PasswordHasherRegistry(
+      new BCryptSha256PasswordHasher(),
+      Seq(new BCryptPasswordHasher())
+    )
   }
 
 }

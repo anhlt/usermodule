@@ -5,6 +5,7 @@ import db.base.{DBConfiguration, TableDefinition}
 import org.joda.time._
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.google.inject._
+import java.util.UUID
 
 class TableDefinitions @Inject()(
     override val dbConfiguration: DBConfiguration
@@ -27,6 +28,15 @@ class TableDefinitions @Inject()(
         createdAt,
         updatedAt
       ) <> (DBUser.tupled, DBUser.unapply _)
+  }
+
+  class AuthTokens(tag: Tag)
+      extends Table[AuthToken](tag, Some("auth"), "token") {
+
+    def token = column[UUID]("token", O.PrimaryKey)
+    def userId = column[Long]("user_id")
+    def expiry = column[DateTime]("expiry")
+    def * = (token, userId, expiry) <> (AuthToken.tupled, AuthToken.unapply)
   }
 
   class OauthClientTable(tag: Tag)
@@ -155,6 +165,7 @@ class TableDefinitions @Inject()(
   val slickPasswordInfos = TableQuery[PasswordInfos]
   val slickOAuth1Infos = TableQuery[OAuth1Infos]
   val slickOAuth2Infos = TableQuery[OAuth2Infos]
+  val slickAuthTokens = TableQuery[AuthTokens]
 
   def loginInfoQuery(loginInfo: LoginInfo) =
     slickLoginInfos.filter(

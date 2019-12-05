@@ -1,14 +1,29 @@
 package controllers
 
 import socket.IotSocketActor
-import javax.inject._
+import com.google.inject._
 import play.api._
 import play.api.mvc._
 import authenticate.TokenAuthenticateAction
 import play.api.libs.streams.ActorFlow
 import akka.actor.ActorSystem
 import akka.stream.Materializer
+import com.mohiva.play.silhouette.api._
+import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
+import com.mohiva.play.silhouette.api.util.PasswordHasherRegistry
+import com.mohiva.play.silhouette.impl.providers._
+import play.api.i18n.I18nSupport
+import play.api.mvc.{
+  AbstractController,
+  AnyContent,
+  ControllerComponents,
+  Request
+}
+import models.services.{AuthTokenService, MailService, UserService}
 
+import utils.auth.DefaultEnv
+
+import scala.concurrent.{ExecutionContext, Future}
 /**
   * This controller creates an `Action` to handle HTTP requests to the
   * application's home page.
@@ -18,7 +33,13 @@ class HomeController @Inject()(
     implicit system: ActorSystem,
     mat: Materializer,
     tokenAuthenticateAction: TokenAuthenticateAction,
-    cc: ControllerComponents
+    cc: ControllerComponents,
+    silhouette: Silhouette[DefaultEnv],
+    userService: UserService,
+    authInfoRepository: AuthInfoRepository,
+    authTokenService: AuthTokenService,
+    passwordHasherRegistry: PasswordHasherRegistry
+
 ) extends AbstractController(cc) {
 
   /**
