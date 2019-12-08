@@ -4,17 +4,17 @@ import db.base.Entity
 import java.util.UUID
 
 case class DBUser(
-    id: Option[Long],
+    id: UUID,
     email: String,
     activated: Boolean = false,
     updatedAt: DateTime = new DateTime(),
     createdAt: DateTime = new DateTime()
 ) extends Entity
 
-case class AuthToken(token: UUID, userID: Long, expiry: DateTime)
+case class AuthToken(token: UUID, userID: UUID, expiry: DateTime)
 
 case class DBOAuthAccessToken(
-    id: Option[Long],
+    id: UUID,
     accountId: Long,
     oauthClientId: Long,
     accessToken: String,
@@ -24,7 +24,7 @@ case class DBOAuthAccessToken(
 ) extends Entity
 
 case class DBOauthAuthorizationCode(
-    id: Option[Long],
+    id: UUID,
     accountId: Long,
     oauthClientId: Long,
     code: String,
@@ -34,7 +34,7 @@ case class DBOauthAuthorizationCode(
 ) extends Entity
 
 case class DBOauthClient(
-    id: Option[Long],
+    id: UUID,
     ownerId: Long,
     grantType: String,
     clientId: String,
@@ -45,7 +45,7 @@ case class DBOauthClient(
 ) extends Entity
 
 case class DBLoginInfo(
-    id: Option[Long],
+    id: UUID,
     providerID: String,
     providerKey: String,
     updatedAt: DateTime = new DateTime(),
@@ -53,9 +53,8 @@ case class DBLoginInfo(
 ) extends Entity
 
 case class DBUserLoginInfo(
-    id: Option[Long],
-    userID: Long,
-    loginInfoId: Long,
+    userID: UUID,
+    loginInfoId: UUID,
     updatedAt: DateTime = new DateTime(),
     createdAt: DateTime = new DateTime()
 ) extends Entity
@@ -64,27 +63,27 @@ case class DBPasswordInfo(
     hasher: String,
     password: String,
     salt: Option[String],
-    loginInfoId: Long,
+    loginInfoId: UUID,
     updatedAt: DateTime = new DateTime(),
     createdAt: DateTime = new DateTime()
 ) extends Entity
 
 case class DBOAuth1Info(
-    id: Option[Long],
+    id: UUID,
     token: String,
     secret: String,
-    loginInfoId: Long,
+    loginInfoId: UUID,
     updatedAt: DateTime,
     createdAt: DateTime
 ) extends Entity
 
 case class DBOAuth2Info(
-    id: Option[Long],
+    id: UUID,
     accessToken: String,
     tokenType: Option[String],
     expiresIn: Option[Int],
     refreshToken: Option[String],
-    loginInfoId: Long,
+    loginInfoId: UUID,
     updatedAt: DateTime,
     createdAt: DateTime
 ) extends Entity

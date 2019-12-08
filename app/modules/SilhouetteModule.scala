@@ -61,7 +61,9 @@ import models.services.{
   UserService,
   UserServiceImpl,
   AuthTokenService,
-  AuthTokenServiceImpl
+  AuthTokenServiceImpl,
+  MailService,
+  DumpMailService
 }
 import scala.concurrent.ExecutionContext.Implicits.global
 import db.base.DBConfiguration
@@ -84,6 +86,7 @@ class SilhouetteModule extends AbstractModule {
       override val driver = slick.jdbc.MySQLProfile
     })
     bind(classOf[TableDefinitions])
+    bind(classOf[MailService]).to(classOf[DumpMailService])
     bind(classOf[AuthTokenService]).to(classOf[AuthTokenServiceImpl])
 
   }

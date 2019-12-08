@@ -6,18 +6,19 @@ import com.github.tototoshi.slick.GenericJodaSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
+import java.util.UUID
 
 trait Repository[E <: Entity] {
 
   def all: Future[Seq[E]]
 
-  def byId(id: Long): Future[Option[E]]
+  def byId(id: UUID): Future[Option[E]]
 
   def insert(entity: E): Future[E]
 
   def update(entity: E): Future[Int]
 
-  def delete(id: Long): Future[Boolean]
+  def delete(id: UUID): Future[Boolean]
 }
 
 trait TableDefinition {
@@ -39,7 +40,7 @@ trait TableDefinition {
       schemaName: Option[String] = None
   ) extends Table[E](tag, schemaName, tableName) {
 
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+    def id = column[UUID]("id", O.PrimaryKey)
     val createdAt = column[DateTime](
       "created_date",
       O.Default(DateTime.now())
@@ -72,7 +73,7 @@ trait Repositories {
       table.to[Seq].result
     }
 
-    override def byId(id: Long): Future[Option[E]] = db.run {
+    override def byId(id: UUID): Future[Option[E]] = db.run {
       table.filter(_.id === id).result.headOption
     }
 
@@ -84,7 +85,7 @@ trait Repositories {
       table.insertOrUpdate(entity)
     }
 
-    override def delete(id: Long): Future[Boolean] = db.run {
+    override def delete(id: UUID): Future[Boolean] = db.run {
       table.filter(_.id === id).delete.map(_ > 0)
     }
 

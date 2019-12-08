@@ -45,7 +45,7 @@ class PasswordInfoRepository @Inject()(
           authInfo.hasher,
           authInfo.password,
           authInfo.salt,
-          dbLoginInfo.id.get
+          dbLoginInfo.id
         )
     }.transactionally
 

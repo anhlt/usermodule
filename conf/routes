@@ -11,5 +11,7 @@ GET     /socket                     controllers.HomeController.socket
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-
-->      /auth                           auth.Routes
+POST        /signIn                          controllers.SignInController.submit
+POST        /signUp                          controllers.SignUpController.submit
+GET         /account/email/:email            controllers.ActivateAccountController.send(email: String)
+GET         /account/activate/:token         controllers.ActivateAccountController.activate(token: java.util.UUID)

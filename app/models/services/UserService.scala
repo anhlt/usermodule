@@ -22,7 +22,7 @@ trait UserService extends IdentityService[User] {
     * @param id The ID to retrieve a user.
     * @return The retrieved user or None if no user could be retrieved for the given ID.
     */
-  def retrieve(id: Long): Future[Option[User]]
+  def retrieve(id: UUID): Future[Option[User]]
 
   /**
     * Saves a user.
@@ -83,7 +83,7 @@ class UserServiceImpl @Inject()(userRepository: UserRepository)(
       case None => // Insert a new user
         userRepository.save(
           User(
-            None,
+            UUID.randomUUID(),
             loginInfo = profile.loginInfo,
             email = profile.email,
             activated = false
@@ -98,7 +98,7 @@ class UserServiceImpl @Inject()(userRepository: UserRepository)(
     * @param id The ID to retrieve a user.
     * @return The retrieved user or None if no user could be retrieved for the given ID.
     */
-  override def retrieve(id: Long): Future[Option[User]] =
+  override def retrieve(id: UUID): Future[Option[User]] =
     userRepository.find(id)
 
 }

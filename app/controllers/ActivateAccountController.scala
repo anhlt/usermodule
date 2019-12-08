@@ -42,10 +42,10 @@ class ActivateAccountController @Inject()(
 
     userService.retrieve(loginInfo).flatMap {
       case Some(user) if !user.activated =>
-        authTokenService.create(user.id.get).map { authToken =>
-          // val route = routes.ActivateAccountController.activate(authToken.id)
-          // mailService
-          //   .sendActivateAccountEmail(decodedEmail, route.absoluteURL())
+        authTokenService.create(user.id).map { authToken =>
+          val route = routes.ActivateAccountController.activate(authToken.token)
+          mailService
+            .sendActivateAccountEmail(decodedEmail, route.absoluteURL())
           Ok
         }
       case None => Future.successful(Ok)

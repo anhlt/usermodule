@@ -25,8 +25,9 @@ import db.{
 }
 
 import org.joda.time._
-import scala.concurrent.Await
+import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration._
+import java.util.UUID
 
 class V1_2__new extends BaseJavaMigration {
   implicit val dialect: MySQLDialect = new MySQLDialect
@@ -38,7 +39,7 @@ class V1_2__new extends BaseJavaMigration {
       schemaName: Option[String] = None
   ) extends Table[E](tag, schemaName, tableName) {
 
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+    def id = column[UUID]("id", O.PrimaryKey)
     val createdAt =
       column[DateTime]("created_date", O.SqlType("timestamp default now()"))
     val updatedAt = column[DateTime](
@@ -47,14 +48,20 @@ class V1_2__new extends BaseJavaMigration {
     )
   }
 
-  class UserTable(tag: Tag) extends BaseTable[DBUser](tag, "users") {
+  class UserTable(tag: Tag) extends Table[DBUser](tag, "users") {
 
+    def id = column[UUID]("id", O.PrimaryKey)
     val email = column[String]("email")
     val activated = column[Boolean]("activated")
-
+    val createdAt =
+      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
+    val updatedAt = column[DateTime](
+      "updated_date",
+      O.SqlType("timestamp default now()")
+    )
     def * =
       (
-        id.?,
+        id,
         email,
         activated,
         createdAt,
@@ -72,7 +79,7 @@ class V1_2__new extends BaseJavaMigration {
     val redirectUri = column[String]("redirect_uri")
     def * =
       (
-        id.?,
+        id,
         ownerId,
         grantType,
         clientId,
@@ -95,7 +102,7 @@ class V1_2__new extends BaseJavaMigration {
     val redirectUri = column[String]("redirect_uri")
     def * =
       (
-        id.?,
+        id,
         accountId,
         oauthClientId,
         code,
@@ -117,7 +124,7 @@ class V1_2__new extends BaseJavaMigration {
 
     def * =
       (
-        id.?,
+        id,
         accountId,
         oauthClientId,
         accessToken,
@@ -131,23 +138,33 @@ class V1_2__new extends BaseJavaMigration {
     def providerID = column[String]("providerID")
     def providerKey = column[String]("providerKey")
     def * =
-      (id.?, providerID, providerKey, createdAt, updatedAt) <> (DBLoginInfo.tupled, DBLoginInfo.unapply)
+      (id, providerID, providerKey, createdAt, updatedAt) <> (DBLoginInfo.tupled, DBLoginInfo.unapply)
   }
 
   class UserLoginInfos(tag: Tag)
-      extends BaseTable[DBUserLoginInfo](tag, "userlogininfo") {
-    def userID = column[Long]("userID")
-    def loginInfoId = column[Long]("loginInfoId")
+      extends Table[DBUserLoginInfo](tag, "userlogininfo") {
+    def userID = column[UUID]("userID")
+    def loginInfoId = column[UUID]("loginInfoId")
+    def createdAt =
+      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
+    def updatedAt = column[DateTime](
+      "updated_date",
+      O.SqlType("timestamp default now()")
+    )
     def * =
-      (id.?, userID, loginInfoId, createdAt, updatedAt) <> (DBUserLoginInfo.tupled, DBUserLoginInfo.unapply)
+      (userID, loginInfoId, createdAt, updatedAt) <> (DBUserLoginInfo.tupled, DBUserLoginInfo.unapply)
   }
 
   class PasswordInfos(tag: Tag)
-      extends BaseTable[DBPasswordInfo](tag, "passwordinfo") {
+      extends Table[DBPasswordInfo](tag, "passwordinfo") {
     def hasher = column[String]("hasher")
     def password = column[String]("password")
     def salt = column[Option[String]]("salt")
-    def loginInfoId = column[Long]("loginInfoId")
+    def loginInfoId = column[UUID]("loginInfoId")
+    def createdAt =
+      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
+    def updatedAt =
+      column[DateTime]("updated_date", O.SqlType("timestamp default now()"))
     def * =
       (hasher, password, salt, loginInfoId, createdAt, updatedAt) <> (DBPasswordInfo.tupled, DBPasswordInfo.unapply)
   }
@@ -156,9 +173,9 @@ class V1_2__new extends BaseJavaMigration {
       extends BaseTable[DBOAuth1Info](tag, "oauth1info") {
     def token = column[String]("token")
     def secret = column[String]("secret")
-    def loginInfoId = column[Long]("loginInfoId")
+    def loginInfoId = column[UUID]("loginInfoId")
     def * =
-      (id.?, token, secret, loginInfoId, createdAt, updatedAt) <> (DBOAuth1Info.tupled, DBOAuth1Info.unapply)
+      (id, token, secret, loginInfoId, createdAt, updatedAt) <> (DBOAuth1Info.tupled, DBOAuth1Info.unapply)
   }
 
   class OAuth2Infos(tag: Tag)
@@ -167,10 +184,10 @@ class V1_2__new extends BaseJavaMigration {
     def tokenType = column[Option[String]]("tokentype")
     def expiresIn = column[Option[Int]]("expiresin")
     def refreshToken = column[Option[String]]("refreshtoken")
-    def loginInfoId = column[Long]("logininfoid")
+    def loginInfoId = column[UUID]("logininfoid")
     def * =
       (
-        id.?,
+        id,
         accessToken,
         tokenType,
         expiresIn,
@@ -232,7 +249,6 @@ class V1_2__new extends BaseJavaMigration {
     _.updatedAt
   )
   val m6 = TableMigration(passwordInfoTable).create.addColumns(
-    _.id,
     _.hasher,
     _.password,
     _.salt,
@@ -261,16 +277,38 @@ class V1_2__new extends BaseJavaMigration {
     _.updatedAt
   )
 
-  def migrate(context: Context): Unit = {
+  val m9 = TableMigration(userLoginInfoTable).create.addColumns(
+    _.userID,
+    _.loginInfoId,
+    _.createdAt,
+    _.updatedAt
+  )
 
-    db.run(m1())
-    db.run(m2())
-    db.run(m3())
-    db.run(m4())
-    db.run(m5())
-    db.run(m6())
-    db.run(m7())
-    db.run(m8())
+  def migrate(context: Context): Unit = {
+    implicit val ec = ExecutionContext.global
+
+    val actions = (for {
+      _ <- m1()
+      _ <- m2()
+      _ <- m3()
+      _ <- m4()
+      _ <- m5()
+      _ <- m6()
+      _ <- m7()
+      _ <- m8()
+      _ <- m9()
+    } yield ()).transactionally
+
+    // db.run(m1())
+    // db.run(m2())
+    // db.run(m3())
+    // db.run(m4())
+    // db.run(m5())
+    // db.run(m6())
+    // db.run(m7())
+    // db.run(m8())
+    // db.run(m9())
+    db.run(actions)
   }
 
 }

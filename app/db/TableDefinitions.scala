@@ -20,9 +20,10 @@ class TableDefinitions @Inject()(
     val email = column[String]("email")
     val activated = column[Boolean]("activated")
 
+
     def * =
       (
-        id.?,
+        id,
         email,
         activated,
         createdAt,
@@ -31,10 +32,10 @@ class TableDefinitions @Inject()(
   }
 
   class AuthTokens(tag: Tag)
-      extends Table[AuthToken](tag, Some("auth"), "token") {
+      extends Table[AuthToken](tag, "auth_token") {
 
     def token = column[UUID]("token", O.PrimaryKey)
-    def userId = column[Long]("user_id")
+    def userId = column[UUID]("user_id")
     def expiry = column[DateTime]("expiry")
     def * = (token, userId, expiry) <> (AuthToken.tupled, AuthToken.unapply)
   }
@@ -49,7 +50,7 @@ class TableDefinitions @Inject()(
     val redirectUri = column[String]("redirect_uri")
     def * =
       (
-        id.?,
+        id,
         ownerId,
         grantType,
         clientId,
@@ -72,7 +73,7 @@ class TableDefinitions @Inject()(
     val redirectUri = column[String]("redirect_uri")
     def * =
       (
-        id.?,
+        id,
         accountId,
         oauthClientId,
         code,
@@ -94,7 +95,7 @@ class TableDefinitions @Inject()(
 
     def * =
       (
-        id.?,
+        id,
         accountId,
         oauthClientId,
         accessToken,
@@ -108,15 +109,15 @@ class TableDefinitions @Inject()(
     def providerID = column[String]("providerID")
     def providerKey = column[String]("providerKey")
     def * =
-      (id.?, providerID, providerKey, createdAt, updatedAt) <> (DBLoginInfo.tupled, DBLoginInfo.unapply)
+      (id, providerID, providerKey, createdAt, updatedAt) <> (DBLoginInfo.tupled, DBLoginInfo.unapply)
   }
 
   class UserLoginInfos(tag: Tag)
       extends BaseTable[DBUserLoginInfo](tag, "userlogininfo") {
-    def userID = column[Long]("userID")
-    def loginInfoId = column[Long]("loginInfoId")
+    def userID = column[UUID]("userID")
+    def loginInfoId = column[UUID]("loginInfoId")
     def * =
-      (id.?, userID, loginInfoId, createdAt, updatedAt) <> (DBUserLoginInfo.tupled, DBUserLoginInfo.unapply)
+      (userID, loginInfoId, createdAt, updatedAt) <> (DBUserLoginInfo.tupled, DBUserLoginInfo.unapply)
   }
 
   class PasswordInfos(tag: Tag)
@@ -124,7 +125,7 @@ class TableDefinitions @Inject()(
     def hasher = column[String]("hasher")
     def password = column[String]("password")
     def salt = column[Option[String]]("salt")
-    def loginInfoId = column[Long]("loginInfoId")
+    def loginInfoId = column[UUID]("loginInfoId")
     def * =
       (hasher, password, salt, loginInfoId, createdAt, updatedAt) <> (DBPasswordInfo.tupled, DBPasswordInfo.unapply)
   }
@@ -133,9 +134,9 @@ class TableDefinitions @Inject()(
       extends BaseTable[DBOAuth1Info](tag, "oauth1info") {
     def token = column[String]("token")
     def secret = column[String]("secret")
-    def loginInfoId = column[Long]("loginInfoId")
+    def loginInfoId = column[UUID]("loginInfoId")
     def * =
-      (id.?, token, secret, loginInfoId, createdAt, updatedAt) <> (DBOAuth1Info.tupled, DBOAuth1Info.unapply)
+      (id, token, secret, loginInfoId, createdAt, updatedAt) <> (DBOAuth1Info.tupled, DBOAuth1Info.unapply)
   }
 
   class OAuth2Infos(tag: Tag)
@@ -144,10 +145,10 @@ class TableDefinitions @Inject()(
     def tokenType = column[Option[String]]("tokentype")
     def expiresIn = column[Option[Int]]("expiresin")
     def refreshToken = column[Option[String]]("refreshtoken")
-    def loginInfoId = column[Long]("logininfoid")
+    def loginInfoId = column[UUID]("logininfoid")
     def * =
       (
-        id.?,
+        id,
         accessToken,
         tokenType,
         expiresIn,

@@ -24,7 +24,7 @@ trait AuthTokenService {
     * @return The saved auth token.
     */
   def create(
-      userID: Long,
+      userID: UUID,
       expiry: FiniteDuration = 5 minutes
   ): Future[AuthToken]
 
@@ -55,7 +55,7 @@ class AuthTokenServiceImpl @Inject()(authTokenRepository: AuthTokenRepository)(
     * @param expiry The duration a token expires.
     * @return The saved auth token.
     */
-  def create(userID: Long, expiry: FiniteDuration = 12 hours) = {
+  def create(userID: UUID, expiry: FiniteDuration = 12 hours) = {
     val token = AuthToken(
       UUID.randomUUID(),
       userID,

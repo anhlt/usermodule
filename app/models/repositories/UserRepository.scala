@@ -3,6 +3,7 @@ package models.repositories
 import scala.concurrent.Future
 import com.mohiva.play.silhouette.api.LoginInfo
 import models.entities.User
+import java.{util => ju}
 
 /**
   * Give access to the user object.
@@ -23,7 +24,7 @@ trait UserRepository {
     * @param userID The ID of the user to find.
     * @return The found user or None if no user for the given ID could be found.
     */
-  def find(userID: Long): Future[Option[User]]
+  def find(userID: ju.UUID): Future[Option[User]]
 
   /**
     * Saves a user.

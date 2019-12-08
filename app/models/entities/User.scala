@@ -1,9 +1,9 @@
 package models.entities
-
+import java.util.UUID
 import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
 
 case class User(
-    id: Option[Long],
+    id: UUID,
     loginInfo: LoginInfo,
     email: Option[String],
     activated: Boolean

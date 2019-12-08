@@ -1,5 +1,4 @@
 package controllers
-package controllers
 
 import java.util.UUID
 
@@ -21,6 +20,10 @@ import play.api.mvc.{
 import utils.auth.DefaultEnv
 
 import scala.concurrent.{ExecutionContext, Future}
+import forms.BaseForm._
+import play.api.libs.json.{JsValue, Json, Writes}
+import java.{util => ju}
+
 
 /**
   * The `Sign Up` controller.
@@ -55,7 +58,7 @@ class SignUpController @Inject()(
   def submit = silhouette.UnsecuredAction.async {
     implicit request: Request[AnyContent] =>
       SignUpForm.form.bindFromRequest.fold(
-        _ => Future.successful(BadRequest),
+        formWithError => Future.successful(BadRequest(Json.toJson(formWithError.errors))),
         data => {
           val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
           userService.retrieve(loginInfo).flatMap {
@@ -64,7 +67,7 @@ class SignUpController @Inject()(
             case None =>
               val authInfo = passwordHasherRegistry.current.hash(data.password)
               val user = User(
-                id = None,
+                id = ju.UUID.randomUUID(),
                 loginInfo = loginInfo,
                 email = Some(data.email),
                 false
@@ -72,13 +75,13 @@ class SignUpController @Inject()(
               for {
                 user <- userService.save(user)
                 authInfo <- authInfoRepository.add(loginInfo, authInfo)
-                authToken <- authTokenService.create(user.id.get)
+                authToken <- authTokenService.create(user.id)
               } yield {
-                // val route =
-                //   routes.ActivateAccountController.activate(authToken.id)
-                // mailService
-                //   .sendActivateAccountEmail(data.email, route.absoluteURL())
-                // silhouette.env.eventBus.publish(SignUpEvent(user, request))
+                val route =
+                  routes.ActivateAccountController.activate(authToken.token)
+                mailService
+                  .sendActivateAccountEmail(data.email, route.absoluteURL())
+                silhouette.env.eventBus.publish(SignUpEvent(user, request))
                 Ok
               }
           }

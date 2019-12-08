@@ -8,11 +8,15 @@ import scala.concurrent.Future
 import models.entities.User
 import com.mohiva.play.silhouette.api.LoginInfo
 import scala.concurrent.ExecutionContext
+import play.api.Logging
+import java.{util => ju}
+import tyrex.services.UUID
 
 class UserRepositoryImp @Inject()(
     val tableDefinations: TableDefinitions,
     implicit val ex: ExecutionContext
-) extends UserRepository {
+) extends UserRepository
+    with Logging {
   import tableDefinations._
   import tableDefinations.dbConfiguration.driver.api._
 
@@ -56,7 +60,7 @@ class UserRepositoryImp @Inject()(
     * @param userID The ID of the user to find.
     * @return The found user or None if no user for the given ID could be found.
     */
-  def find(userID: Long): Future[Option[User]] = {
+  def find(userID: ju.UUID): Future[Option[User]] = {
     val query = for {
       dbUser <- slickUsers.filter(_.id === userID)
       dbUserLoginInfo <- slickUserLoginInfos.filter(_.userID === dbUser.id)
@@ -84,9 +88,14 @@ class UserRepositoryImp @Inject()(
     * @return The saved user.
     */
   def save(user: User): Future[User] = {
+    logger.info(s" Save User ${user}")
     val dbUser = DBUser(user.id, user.email.get)
     val dbLoginInfo =
-      DBLoginInfo(None, user.loginInfo.providerID, user.loginInfo.providerKey)
+      DBLoginInfo(
+        ju.UUID.randomUUID(),
+        user.loginInfo.providerID,
+        user.loginInfo.providerKey
+      )
     // We don't have the LoginInfo id so we try to get it first.
     // If there is no LoginInfo yet for this user we retrieve the id on insertion.
     val loginInfoAction = {
@@ -98,9 +107,17 @@ class UserRepositoryImp @Inject()(
         )
         .result
         .headOption
-      val insertLoginInfo = slickLoginInfos
-        .returning(slickLoginInfos.map(_.id))
-        .into((info, id) => info.copy(id = Some(id))) += dbLoginInfo
+
+      val q = slickLoginInfos.filter(
+        info =>
+          info.providerID === user.loginInfo.providerID &&
+            info.providerKey === user.loginInfo.providerKey
+      )
+
+
+      val insertLoginInfo = slickLoginInfos += dbLoginInfo
+
+
       for {
         loginInfoOption <- retrieveLoginInfo
         loginInfo <- loginInfoOption
@@ -111,11 +128,10 @@ class UserRepositoryImp @Inject()(
     // combine database actions to be run sequentially
     val actions = (for {
       _ <- slickUsers.insertOrUpdate(dbUser)
-      loginInfo <- loginInfoAction
+      _ <- loginInfoAction
       _ <- slickUserLoginInfos += DBUserLoginInfo(
-        None,
-        dbUser.id.get,
-        loginInfo.id.get
+        dbUser.id,
+        dbLoginInfo.id
       )
     } yield ()).transactionally
     // run actions and return user afterwards
