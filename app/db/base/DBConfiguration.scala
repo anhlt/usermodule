@@ -11,3 +11,5 @@ trait DBConfiguration {
 
   lazy val db: Database = Database.forConfig("db.default")
 }
+
+

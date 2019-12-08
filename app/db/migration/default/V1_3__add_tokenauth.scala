@@ -1,6 +1,7 @@
 package db.migration.default
 
-import slick.jdbc.MySQLProfile.api._
+import db.base.CustomMySqlProfile
+import db.base.CustomMySqlProfile.api._
 import slick.migration.api._
 import slick.migration.api.flyway._
 import slick.migration.api.flyway.UnmanagedDatabase
@@ -11,6 +12,7 @@ import db.base.{DBConfiguration, TableDefinition, Entity}
 
 import com.github.tototoshi.slick.MySQLJodaSupport._
 import scala.reflect.ClassTag
+import scala.concurrent.ExecutionContext
 
 import db.{
   DBUser,
@@ -31,7 +33,7 @@ import scala.concurrent.duration._
 import java.util.UUID
 
 class V1_3__add_tokenauth extends BaseJavaMigration {
-  implicit val dialect: MySQLDialect = new MySQLDialect
+  implicit val dialect = GenericDialect(CustomMySqlProfile)
   lazy val db = Database.forConfig("db.default")
 
   abstract class BaseTable[E <: Entity: ClassTag](
@@ -49,11 +51,10 @@ class V1_3__add_tokenauth extends BaseJavaMigration {
     )
   }
 
-  class AuthTokens(tag: Tag)
-      extends Table[AuthToken](tag, "auth_token") {
+  class AuthTokens(tag: Tag) extends Table[AuthToken](tag, "auth_token") {
 
-    def token = column[UUID]("token", O.PrimaryKey)
-    def userId = column[UUID]("user_id")
+    def token = column[UUID]("token", O.PrimaryKey, O.SqlType("varchar(255)"))
+    def userId = column[UUID]("user_id", O.SqlType("varchar(255)"))
     def expiry = column[DateTime]("expiry")
     def * = (token, userId, expiry) <> (AuthToken.tupled, AuthToken.unapply)
   }
@@ -82,14 +83,17 @@ class V1_3__add_tokenauth extends BaseJavaMigration {
     _.expiry
   )
 
-  val m2 = TableMigration(usertable).addColumns(
-    _.activated
-  )
-
   def migrate(context: Context): Unit = {
+    implicit val ec = ExecutionContext.global
 
-    db.run(m1())
-    db.run(m2())
+    val actions = (for {
+      _ <- m1()
+
+    } yield ()).transactionally
+
+    val rs = db.run(actions)
+    Await.result(rs, 10 seconds)
+
   }
 
 }

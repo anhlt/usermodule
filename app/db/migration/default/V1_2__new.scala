@@ -1,6 +1,7 @@
 package db.migration.default
 
-import slick.jdbc.MySQLProfile.api._
+import db.base.CustomMySqlProfile
+import db.base.CustomMySqlProfile.api._
 import slick.migration.api._
 import slick.migration.api.flyway._
 import slick.migration.api.flyway.UnmanagedDatabase
@@ -30,7 +31,7 @@ import scala.concurrent.duration._
 import java.util.UUID
 
 class V1_2__new extends BaseJavaMigration {
-  implicit val dialect: MySQLDialect = new MySQLDialect
+  implicit val dialect = GenericDialect(CustomMySqlProfile)
   lazy val db = Database.forConfig("db.default")
 
   abstract class BaseTable[E <: Entity: ClassTag](
@@ -39,7 +40,7 @@ class V1_2__new extends BaseJavaMigration {
       schemaName: Option[String] = None
   ) extends Table[E](tag, schemaName, tableName) {
 
-    def id = column[UUID]("id", O.PrimaryKey)
+    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
     val createdAt =
       column[DateTime]("created_date", O.SqlType("timestamp default now()"))
     val updatedAt = column[DateTime](
@@ -50,7 +51,7 @@ class V1_2__new extends BaseJavaMigration {
 
   class UserTable(tag: Tag) extends Table[DBUser](tag, "users") {
 
-    def id = column[UUID]("id", O.PrimaryKey)
+    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
     val email = column[String]("email")
     val activated = column[Boolean]("activated")
     val createdAt =
@@ -143,8 +144,8 @@ class V1_2__new extends BaseJavaMigration {
 
   class UserLoginInfos(tag: Tag)
       extends Table[DBUserLoginInfo](tag, "userlogininfo") {
-    def userID = column[UUID]("userID")
-    def loginInfoId = column[UUID]("loginInfoId")
+    def userID = column[UUID]("userID", O.SqlType("varchar(255)"))
+    def loginInfoId = column[UUID]("loginInfoId", O.SqlType("varchar(255)"))
     def createdAt =
       column[DateTime]("created_date", O.SqlType("timestamp default now()"))
     def updatedAt = column[DateTime](
@@ -160,7 +161,7 @@ class V1_2__new extends BaseJavaMigration {
     def hasher = column[String]("hasher")
     def password = column[String]("password")
     def salt = column[Option[String]]("salt")
-    def loginInfoId = column[UUID]("loginInfoId")
+    def loginInfoId = column[UUID]("loginInfoId", O.SqlType("varchar(255)"))
     def createdAt =
       column[DateTime]("created_date", O.SqlType("timestamp default now()"))
     def updatedAt =
@@ -173,7 +174,7 @@ class V1_2__new extends BaseJavaMigration {
       extends BaseTable[DBOAuth1Info](tag, "oauth1info") {
     def token = column[String]("token")
     def secret = column[String]("secret")
-    def loginInfoId = column[UUID]("loginInfoId")
+    def loginInfoId = column[UUID]("loginInfoId", O.SqlType("varchar(255)"))
     def * =
       (id, token, secret, loginInfoId, createdAt, updatedAt) <> (DBOAuth1Info.tupled, DBOAuth1Info.unapply)
   }
@@ -184,7 +185,7 @@ class V1_2__new extends BaseJavaMigration {
     def tokenType = column[Option[String]]("tokentype")
     def expiresIn = column[Option[Int]]("expiresin")
     def refreshToken = column[Option[String]]("refreshtoken")
-    def loginInfoId = column[UUID]("logininfoid")
+    def loginInfoId = column[UUID]("logininfoid", O.SqlType("varchar(255)"))
     def * =
       (
         id,
@@ -308,7 +309,9 @@ class V1_2__new extends BaseJavaMigration {
     // db.run(m7())
     // db.run(m8())
     // db.run(m9())
-    db.run(actions)
+    val rs = db.run(actions)
+
+    Await.result(rs, 10 seconds)
   }
 
 }

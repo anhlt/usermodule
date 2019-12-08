@@ -66,8 +66,9 @@ import models.services.{
   DumpMailService
 }
 import scala.concurrent.ExecutionContext.Implicits.global
-import db.base.DBConfiguration
-import db.TableDefinitions
+import db.base.{DBConfiguration, CustomMySqlProfile}
+
+import db.{TableDefinitions}
 import akka.actor.ActorSystem
 import scala.concurrent.ExecutionContext
 
@@ -83,7 +84,7 @@ class SilhouetteModule extends AbstractModule {
     bind(classOf[Clock]).toInstance(Clock())
 
     bind(classOf[DBConfiguration]).toInstance(new DBConfiguration {
-      override val driver = slick.jdbc.MySQLProfile
+      override val driver = CustomMySqlProfile
     })
     bind(classOf[TableDefinitions])
     bind(classOf[MailService]).to(classOf[DumpMailService])
