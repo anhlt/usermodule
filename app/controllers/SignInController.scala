@@ -19,6 +19,7 @@ import play.api.mvc.{
   Request
 }
 import utils.auth.DefaultEnv
+import forms.BaseForm._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -60,7 +61,7 @@ class SignInController @Inject()(
   def submit = silhouette.UnsecuredAction.async {
     implicit request: Request[AnyContent] =>
       SignInForm.form.bindFromRequest.fold(
-        form => Future.successful(BadRequest),
+        formWithError => Future.successful(BadRequest(Json.toJson(formWithError.errors))),
         data => {
           val credentials = Credentials(data.email, data.password)
           credentialsProvider
