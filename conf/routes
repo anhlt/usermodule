@@ -13,5 +13,8 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 POST        /signIn                          controllers.SignInController.submit
 POST        /signUp                          controllers.SignUpController.submit
+POST        /signOut                         controllers.SignOutController.submit
+
 GET         /account/email/:email            controllers.ActivateAccountController.send(email: String)
 GET         /account/activate/:token         controllers.ActivateAccountController.activate(token: java.util.UUID)
+GET         /api/user                        controllers.v1.Users.user
