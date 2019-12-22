@@ -8,5 +8,5 @@ case class User(
     loginInfo: LoginInfo,
     email: Option[String],
     activated: Boolean,
-    roles: Seq[Role] = Seq.empty[Role]
+    roles: Seq[Role.Value] = Seq.empty[Role.Value]
 ) extends Identity

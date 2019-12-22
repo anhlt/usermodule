@@ -6,7 +6,7 @@ import play.api.i18n._
 import play.api.mvc.Request
 import scala.concurrent.Future
 
-case class WithRole(role: Role) extends Authorization[User, JWTAuthenticator] {
+case class WithRole(role: Role.Value) extends Authorization[User, JWTAuthenticator] {
   def isAuthorized[B](identity: User, authenticator: JWTAuthenticator)(
       implicit request: Request[B]
   ): Future[Boolean] = {
@@ -16,21 +16,14 @@ case class WithRole(role: Role) extends Authorization[User, JWTAuthenticator] {
 }
 import play.api.libs.json._
 
-object Role {
 
-  implicit val childAFormat = Json.format[Admin]
-  implicit val childBFormat = Json.format[OrdinaryUser]
-  implicit val familyFormat = Json.format[Role]
-}
-sealed trait Role {
-  val name: String
-}
+object Role extends Enumeration {
 
-case class Admin(name: String = "Admin") extends Role {}
+  type Role = Value
 
-case class OrdinaryUser(name: String = "OrdinaryUser") extends Role {}
+  val Admin = Value("OrdinaryUser")
+  val OrdinaryUser = Value("OrdinaryUser")
 
-object WeekDay extends Enumeration {
-  type WeekDay = Value
-  val Mon, Tue, Wed, Thu, Fri, Sat, Sun = Value
+  implicit val myEnumReads = Reads.enumNameReads(Role)
+  implicit val myEnumWrites = Writes.enumNameWrites
 }

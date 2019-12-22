@@ -12,7 +12,7 @@ import play.api.Logging
 import java.{util => ju}
 import tyrex.services.UUID
 import db.DBUserRoles
-import utils.auth.OrdinaryUser
+import utils.auth.Role
 
 class UserRepositoryImp @Inject()(
     val tableDefinations: TableDefinitions,
@@ -141,7 +141,7 @@ class UserRepositoryImp @Inject()(
       )
       _ <- slickUserRoles += DBUserRoles(
         dbUser.id,
-        OrdinaryUser().name
+        Role.OrdinaryUser.toString
       )
     } yield ()).transactionally
     // run actions and return user afterwards
