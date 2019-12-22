@@ -65,13 +65,13 @@ class ActivateAccountController @Inject()(
           case Some(user)
               if user.loginInfo.providerID == CredentialsProvider.ID =>
             userService.save(user.copy(activated = true)).map { _ =>
-              Redirect("/signin?message=emailVerified")
+              Ok("/signin?message=emailVerified")
             }
           case _ =>
-            Future.successful(Redirect("/error?message=activationTokenInvalid"))
+            Future.successful(Ok("/error?message=activationTokenInvalid"))
         }
       case None =>
-        Future.successful(Redirect("/error?message=activationTokenInvalid"))
+        Future.successful(Ok("/error?message=activationTokenInvalid"))
     }
   }
 }

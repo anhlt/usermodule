@@ -11,6 +11,8 @@ import scala.concurrent.ExecutionContext
 import play.api.Logging
 import java.{util => ju}
 import tyrex.services.UUID
+import db.DBUserRoles
+import utils.auth.OrdinaryUser
 
 class UserRepositoryImp @Inject()(
     val tableDefinations: TableDefinitions,
@@ -89,7 +91,7 @@ class UserRepositoryImp @Inject()(
     */
   def save(user: User): Future[User] = {
     logger.info(s" Save User ${user}")
-    val dbUser = DBUser(user.id, user.email.get)
+    val dbUser = DBUser(user.id, user.email.get, user.activated)
     val dbLoginInfo =
       DBLoginInfo(
         ju.UUID.randomUUID(),
@@ -114,15 +116,19 @@ class UserRepositoryImp @Inject()(
             info.providerKey === user.loginInfo.providerKey
       )
 
-
       val insertLoginInfo = slickLoginInfos += dbLoginInfo
-
 
       for {
         loginInfoOption <- retrieveLoginInfo
         loginInfo <- loginInfoOption
-          .map(DBIO.successful(_))
-          .getOrElse(insertLoginInfo)
+          .map(x => {
+            logger.info(s"$x")
+            DBIO.successful(x)
+          })
+          .getOrElse({
+            logger.info("===>")
+            insertLoginInfo
+          })
       } yield loginInfo
     }
     // combine database actions to be run sequentially
@@ -132,6 +138,10 @@ class UserRepositoryImp @Inject()(
       _ <- slickUserLoginInfos += DBUserLoginInfo(
         dbUser.id,
         dbLoginInfo.id
+      )
+      _ <- slickUserRoles += DBUserRoles(
+        dbUser.id,
+        OrdinaryUser().name
       )
     } yield ()).transactionally
     // run actions and return user afterwards

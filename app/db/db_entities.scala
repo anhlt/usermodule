@@ -11,6 +11,13 @@ case class DBUser(
     createdAt: DateTime = new DateTime()
 ) extends Entity
 
+case class DBUserRoles(
+    userId: UUID,
+    role: String,
+    updatedAt: DateTime = new DateTime(),
+    createdAt: DateTime = new DateTime()
+) extends Entity
+
 case class AuthToken(token: UUID, userID: UUID, expiry: DateTime)
 
 case class DBOAuthAccessToken(

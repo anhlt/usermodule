@@ -29,3 +29,8 @@ sealed trait Role {
 case class Admin(name: String = "Admin") extends Role {}
 
 case class OrdinaryUser(name: String = "OrdinaryUser") extends Role {}
+
+object WeekDay extends Enumeration {
+  type WeekDay = Value
+  val Mon, Tue, Wed, Thu, Fri, Sat, Sun = Value
+}

@@ -20,7 +20,6 @@ class TableDefinitions @Inject()(
     val email = column[String]("email")
     val activated = column[Boolean]("activated")
 
-
     def * =
       (
         id,
@@ -31,8 +30,7 @@ class TableDefinitions @Inject()(
       ) <> (DBUser.tupled, DBUser.unapply _)
   }
 
-  class AuthTokens(tag: Tag)
-      extends Table[AuthToken](tag, "auth_token") {
+  class AuthTokens(tag: Tag) extends Table[AuthToken](tag, "auth_token") {
 
     def token = column[UUID]("token", O.PrimaryKey)
     def userId = column[UUID]("user_id")
@@ -159,6 +157,21 @@ class TableDefinitions @Inject()(
       ) <> (DBOAuth2Info.tupled, DBOAuth2Info.unapply)
   }
 
+  class UserRoles(tag: Tag) extends Table[DBUserRoles](tag, "user_roles") {
+    def userId = column[UUID]("user_id", O.SqlType("varchar(255)"))
+    def role = column[String]("role", O.SqlType("varchar(255)"))
+    val createdAt = column[DateTime](
+      "created_date",
+      O.Default(DateTime.now())
+    )
+    val updatedAt = column[DateTime](
+      "updated_date",
+      O.Default(DateTime.now())
+    )
+    def * =
+      (userId, role, createdAt, updatedAt) <> (DBUserRoles.tupled, DBUserRoles.unapply)
+  }
+
   // table query definitions
   val slickUsers = TableQuery[UserTable]
   val slickLoginInfos = TableQuery[LoginInfos]
@@ -167,6 +180,7 @@ class TableDefinitions @Inject()(
   val slickOAuth1Infos = TableQuery[OAuth1Infos]
   val slickOAuth2Infos = TableQuery[OAuth2Infos]
   val slickAuthTokens = TableQuery[AuthTokens]
+  val slickUserRoles = TableQuery[UserRoles]
 
   def loginInfoQuery(loginInfo: LoginInfo) =
     slickLoginInfos.filter(

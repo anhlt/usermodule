@@ -37,7 +37,7 @@ class SignOutController @Inject()(
       ] =>
         silhouette.env.authenticatorService.discard(
           request.authenticator,
-          Redirect("/login")
+          Ok(Json.obj("message" -> "Signed out"))
         )
     })
 }

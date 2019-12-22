@@ -24,7 +24,8 @@ import db.{
   DBPasswordInfo,
   DBOAuth1Info,
   DBOAuth2Info,
-  AuthToken
+  AuthToken,
+  DBUserRoles
 }
 
 import org.joda.time._
@@ -32,7 +33,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 import java.util.UUID
 
-class V1_3__add_tokenauth extends BaseJavaMigration {
+class V1_4__add_user_role extends BaseJavaMigration {
   implicit val dialect = GenericDialect(CustomMySqlProfile)
   lazy val db = Database.forConfig("db.default")
 
@@ -51,36 +52,26 @@ class V1_3__add_tokenauth extends BaseJavaMigration {
     )
   }
 
-  class AuthTokens(tag: Tag) extends Table[AuthToken](tag, "auth_token") {
-
-    def token = column[UUID]("token", O.PrimaryKey, O.SqlType("varchar(255)"))
+  class UserRoles(tag: Tag) extends Table[DBUserRoles](tag, "user_roles") {
     def userId = column[UUID]("user_id", O.SqlType("varchar(255)"))
-    def expiry = column[DateTime]("expiry")
-    def * = (token, userId, expiry) <> (AuthToken.tupled, AuthToken.unapply)
-  }
-
-  class UserTable(tag: Tag) extends BaseTable[DBUser](tag, "users") {
-
-    val email = column[String]("email")
-    val activated = column[Boolean]("activated")
-
+    def role = column[String]("role", O.SqlType("varchar(255)"))
+    val createdAt =
+      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
+    val updatedAt = column[DateTime](
+      "updated_date",
+      O.SqlType("timestamp default now()")
+    )
     def * =
-      (
-        id,
-        email,
-        activated,
-        createdAt,
-        updatedAt
-      ) <> (DBUser.tupled, DBUser.unapply _)
+      (userId, role, createdAt, updatedAt) <> (DBUserRoles.tupled, DBUserRoles.unapply)
   }
 
-  val authTokenTable = TableQuery[AuthTokens]
-  val usertable = TableQuery[UserTable]
+  val authTokenTable = TableQuery[UserRoles]
 
   val m1 = TableMigration(authTokenTable).create.addColumns(
-    _.token,
     _.userId,
-    _.expiry
+    _.role,
+    _.createdAt,
+    _.updatedAt
   )
 
   def migrate(context: Context): Unit = {

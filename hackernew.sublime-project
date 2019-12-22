@@ -22,6 +22,10 @@
 			"metals-sublime":
 			{
 				"enabled": true
+			},
+			"typescript-language-server":
+			{
+				"enabled": false
 			}
 		}
 	}
