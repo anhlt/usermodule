@@ -6,7 +6,8 @@
 			[
 				".bloop",
 				".g8",
-				".bloop"
+				".bloop",
+				"target"
 			],
 			"path": "."
 		}

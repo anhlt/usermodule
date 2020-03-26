@@ -9,6 +9,7 @@ target
 /.g8
 /.metals
 /RUNNING_PID
+/project/metals.sbt
 
 
 ###SublimeText###

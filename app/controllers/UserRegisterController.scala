@@ -24,7 +24,7 @@ import play.api.libs.json._
 import utils.response.JsonWriters._
 import utils.response._
 
-class SignOutController @Inject()(
+class UserRegisterController @Inject()(
     silhouette: Silhouette[DefaultEnv],
     cc: ControllerComponents
 ) extends AbstractController(cc) {
