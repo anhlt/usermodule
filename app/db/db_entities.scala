@@ -6,6 +6,8 @@ import java.util.UUID
 case class DBUser(
     id: UUID,
     email: String,
+    username: Option[String],
+    nickname: Option[String],
     activated: Boolean = false,
     updatedAt: DateTime = new DateTime(),
     createdAt: DateTime = new DateTime()

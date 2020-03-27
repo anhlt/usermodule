@@ -49,7 +49,7 @@ class V1_2__new extends BaseJavaMigration {
     )
   }
 
-  class UserTable(tag: Tag) extends Table[DBUser](tag, "users") {
+  class UserTable(tag: Tag) extends Table[(UUID, String, Boolean, DateTime, DateTime)](tag, "users") {
 
     def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
     val email = column[String]("email")
@@ -60,14 +60,8 @@ class V1_2__new extends BaseJavaMigration {
       "updated_date",
       O.SqlType("timestamp default now()")
     )
-    def * =
-      (
-        id,
-        email,
-        activated,
-        createdAt,
-        updatedAt
-      ) <> (DBUser.tupled, DBUser.unapply _)
+    
+    def * = (id, email, activated, createdAt, updatedAt)
   }
 
   class OauthClientTable(tag: Tag)

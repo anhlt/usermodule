@@ -14,7 +14,9 @@ object SignUpForm {
   val form = Form(
     mapping(
       "email" -> email,
-      "password" -> nonEmptyText
+      "password" -> nonEmptyText,
+      "username" -> nonEmptyText,
+      "nickname" -> nonEmptyText
     )(Data.apply)(Data.unapply)
   )
 
@@ -28,6 +30,8 @@ object SignUpForm {
     */
   case class Data(
       email: String,
-      password: String
+      password: String,
+      username: String,
+      nickname: String
   )
 }

@@ -86,6 +86,8 @@ class UserServiceImpl @Inject()(userRepository: UserRepository)(
             UUID.randomUUID(),
             loginInfo = profile.loginInfo,
             email = profile.email,
+            username = None,
+            nickname = None,
             activated = false
           )
         )

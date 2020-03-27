@@ -50,6 +50,8 @@ class UserRepositoryImp @Inject()(
           user.id,
           loginInfo,
           Some(user.email),
+          user.username,
+          user.nickname,
           user.activated
         )
       }
@@ -77,6 +79,8 @@ class UserRepositoryImp @Inject()(
             user.id,
             LoginInfo(loginInfo.providerID, loginInfo.providerKey),
             Some(user.email),
+            user.username,
+            user.nickname,
             user.activated
           )
       }
@@ -91,7 +95,7 @@ class UserRepositoryImp @Inject()(
     */
   def save(user: User): Future[User] = {
     logger.info(s" Save User ${user}")
-    val dbUser = DBUser(user.id, user.email.get, user.activated)
+    val dbUser = DBUser(user.id, user.email.get, user.username, user.nickname, user.activated)
     val dbLoginInfo =
       DBLoginInfo(
         ju.UUID.randomUUID(),

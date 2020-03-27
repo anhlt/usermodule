@@ -19,11 +19,15 @@ class TableDefinitions @Inject()(
 
     val email = column[String]("email")
     val activated = column[Boolean]("activated")
+    val username = column[String]("username")
+    val nickname = column[String]("nickname")
 
     def * =
       (
         id,
         email,
+        username.?,
+        nickname.?,
         activated,
         createdAt,
         updatedAt
