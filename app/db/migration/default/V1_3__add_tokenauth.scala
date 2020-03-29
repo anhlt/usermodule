@@ -36,20 +36,6 @@ class V1_3__add_tokenauth extends BaseJavaMigration {
   implicit val dialect = GenericDialect(CustomMySqlProfile)
   lazy val db = Database.forConfig("db.default")
 
-  abstract class BaseTable[E <: Entity: ClassTag](
-      tag: Tag,
-      tableName: String,
-      schemaName: Option[String] = None
-  ) extends Table[E](tag, schemaName, tableName) {
-
-    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
-    val createdAt =
-      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
-    val updatedAt = column[DateTime](
-      "updated_date",
-      O.SqlType("timestamp default now()")
-    )
-  }
 
   class AuthTokens(tag: Tag) extends Table[AuthToken](tag, "auth_token") {
 
@@ -59,10 +45,16 @@ class V1_3__add_tokenauth extends BaseJavaMigration {
     def * = (token, userId, expiry) <> (AuthToken.tupled, AuthToken.unapply)
   }
 
-  class UserTable(tag: Tag) extends BaseTable[DBUser](tag, "users") {
+  class UserTable(tag: Tag) extends Table[(java.util.UUID, String, Boolean, org.joda.time.DateTime, org.joda.time.DateTime)](tag, "users") {
+    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
 
     val email = column[String]("email")
     val activated = column[Boolean]("activated")
+    val createdAt =
+      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
+    val updatedAt = column[DateTime](
+      "updated_date",
+      O.SqlType("timestamp default now()"))
 
     def * =
       (
@@ -71,7 +63,7 @@ class V1_3__add_tokenauth extends BaseJavaMigration {
         activated,
         createdAt,
         updatedAt
-      ) <> (DBUser.tupled, DBUser.unapply _)
+      ) 
   }
 
   val authTokenTable = TableQuery[AuthTokens]

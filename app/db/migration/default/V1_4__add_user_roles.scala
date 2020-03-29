@@ -37,21 +37,6 @@ class V1_4__add_user_role extends BaseJavaMigration {
   implicit val dialect = GenericDialect(CustomMySqlProfile)
   lazy val db = Database.forConfig("db.default")
 
-  abstract class BaseTable[E <: Entity: ClassTag](
-      tag: Tag,
-      tableName: String,
-      schemaName: Option[String] = None
-  ) extends Table[E](tag, schemaName, tableName) {
-
-    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
-    val createdAt =
-      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
-    val updatedAt = column[DateTime](
-      "updated_date",
-      O.SqlType("timestamp default now()")
-    )
-  }
-
   class UserRoles(tag: Tag) extends Table[DBUserRoles](tag, "user_roles") {
     def userId = column[UUID]("user_id", O.SqlType("varchar(255)"))
     def role = column[String]("role", O.SqlType("varchar(255)"))
