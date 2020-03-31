@@ -1,4 +1,4 @@
-package controllers
+package controllers.api.v1
 
 import java.util.UUID
 
@@ -23,7 +23,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import forms.BaseForm._
 import play.api.libs.json.{JsValue, Json, Writes}
 import java.{util => ju}
-
 
 /**
   * The `Sign Up` controller.
@@ -58,7 +57,8 @@ class UserRegisterController @Inject()(
   def submit = silhouette.UnsecuredAction.async {
     implicit request: Request[AnyContent] =>
       SignUpForm.form.bindFromRequest.fold(
-        formWithError => Future.successful(BadRequest(Json.toJson(formWithError.errors))),
+        formWithError =>
+          Future.successful(BadRequest(Json.toJson(formWithError.errors))),
         data => {
           val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
           userService.retrieve(loginInfo).flatMap {
@@ -80,7 +80,8 @@ class UserRegisterController @Inject()(
                 authToken <- authTokenService.create(user.id)
               } yield {
                 val route =
-                  routes.ActivateAccountController.activate(authToken.token)
+                  controllers.routes.ActivateAccountController
+                    .activate(authToken.token)
                 mailService
                   .sendActivateAccountEmail(data.email, route.absoluteURL())
                 silhouette.env.eventBus.publish(SignUpEvent(user, request))

@@ -12,9 +12,9 @@ GET     /socket                     controllers.HomeController.socket
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 POST        /signIn                          controllers.SignInController.submit
-POST        /user_register                   controllers.UserRegisterController.submit
 POST        /logout                          controllers.UserLogoutController.submit
 
 GET         /account/email/:email            controllers.ActivateAccountController.send(email: String)
 GET         /account/activate/:token         controllers.ActivateAccountController.activate(token: java.util.UUID)
-GET         /api/user                        controllers.v1.Users.user
+
+->          /api/v1                          api.v1.Routes

@@ -16,17 +16,9 @@
 	{
 		"LSP":
 		{
-			"metals":
-			{
-				"enabled": false
-			},
 			"metals-sublime":
 			{
 				"enabled": true
-			},
-			"typescript-language-server":
-			{
-				"enabled": false
 			}
 		}
 	}

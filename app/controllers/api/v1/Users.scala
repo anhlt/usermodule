@@ -1,4 +1,4 @@
-package controllers.v1
+package controllers.api.v1
 import com.google.inject._
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
