@@ -33,6 +33,8 @@ lazy val root = (project in file("."))
           silhouetteCrypto,
           silhouettePersistence,
           silhouetteTotp,
+          playMailer,
+          playMailerGuice
         )
       )
     ),

@@ -1,5 +1,7 @@
 package models.services
 import forms.SignUpForm
+import com.google.inject._
+
 
 trait UserRegisterService {
 

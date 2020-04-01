@@ -36,5 +36,6 @@
 
   <logger name="slick" level="INFO" />
   <logger name="slick.jdbc" level="INFO" />
+  <logger name="play.mailer" level="DEBUG" />
 
 </configuration>

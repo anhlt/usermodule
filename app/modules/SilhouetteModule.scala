@@ -63,7 +63,8 @@ import models.services.{
   AuthTokenService,
   AuthTokenServiceImpl,
   MailService,
-  DumpMailService
+  DumpMailService,
+  SMTPMailService
 }
 import scala.concurrent.ExecutionContext.Implicits.global
 import db.base.{DBConfiguration, CustomMySqlProfile}
@@ -87,7 +88,7 @@ class SilhouetteModule extends AbstractModule {
       override val driver = CustomMySqlProfile
     })
     bind(classOf[TableDefinitions])
-    bind(classOf[MailService]).to(classOf[DumpMailService])
+    bind(classOf[MailService]).to(classOf[SMTPMailService])
     bind(classOf[AuthTokenService]).to(classOf[AuthTokenServiceImpl])
 
   }
