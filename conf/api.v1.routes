@@ -1,2 +1,4 @@
 GET         /user                        controllers.api.v1.Users.user
 POST        /user_register               controllers.api.v1.UserRegisterController.submit
+POST        /login                       controllers.api.v1.UserLoginController.submit
+POST        /logout                      controllers.api.v1.UserLogoutController.submit

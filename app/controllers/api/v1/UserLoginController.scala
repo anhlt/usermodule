@@ -1,4 +1,4 @@
-package controllers
+package controllers.api.v1
 
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
@@ -22,6 +22,7 @@ import utils.auth.DefaultEnv
 import forms.BaseForm._
 
 import scala.concurrent.{ExecutionContext, Future}
+import controllers.AbstractAuthController
 
 /**
   * The `Sign Up` controller.
@@ -36,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
   * @param mailService           The mailer service.
   * @param ex                     The execution context.
   */
-class SignInController @Inject()(
+class UserLoginController @Inject()(
     components: ControllerComponents,
     silhouette: Silhouette[DefaultEnv],
     userService: UserService,
