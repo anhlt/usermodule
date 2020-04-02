@@ -25,8 +25,6 @@ lazy val root = (project in file("."))
           scalaTestPlay,
           flyway,
           mqtt,
-          oauth2Core,
-          oauth2Provider,
           slickMigrationFlyway,
           silhouette,
           silhouetteBcrypt,
@@ -34,7 +32,9 @@ lazy val root = (project in file("."))
           silhouettePersistence,
           silhouetteTotp,
           playMailer,
-          playMailerGuice
+          playMailerGuice,
+          scalaOauthCore,
+          playOauth2Provider
         )
       )
     ),

@@ -7,7 +7,8 @@
 				".bloop",
 				".g8",
 				".bloop",
-				"target"
+				"target",
+				".metals"
 			],
 			"path": "."
 		}

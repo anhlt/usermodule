@@ -15,9 +15,6 @@ import scala.reflect.ClassTag
 
 import db.{
   DBUser,
-  DBOauthClient,
-  DBOAuthAccessToken,
-  DBOauthAuthorizationCode,
   DBLoginInfo,
   DBUserLoginInfo,
   DBPasswordInfo,
@@ -49,7 +46,8 @@ class V1_2__new extends BaseJavaMigration {
     )
   }
 
-  class UserTable(tag: Tag) extends Table[(UUID, String, Boolean, DateTime, DateTime)](tag, "users") {
+  class UserTable(tag: Tag)
+      extends Table[(UUID, String, Boolean, DateTime, DateTime)](tag, "users") {
 
     def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
     val email = column[String]("email")
@@ -60,73 +58,8 @@ class V1_2__new extends BaseJavaMigration {
       "updated_date",
       O.SqlType("timestamp default now()")
     )
-    
+
     def * = (id, email, activated, createdAt, updatedAt)
-  }
-
-  class OauthClientTable(tag: Tag)
-      extends BaseTable[DBOauthClient](tag, "oauth_clients") {
-
-    val ownerId = column[Long]("owner_id")
-    val grantType = column[String]("grant_type")
-    val clientId = column[String]("client_id")
-    val clientSecret = column[String]("client_secret")
-    val redirectUri = column[String]("redirect_uri")
-    def * =
-      (
-        id,
-        ownerId,
-        grantType,
-        clientId,
-        clientSecret,
-        redirectUri.?,
-        createdAt,
-        updatedAt
-      ) <> (DBOauthClient.tupled, DBOauthClient.unapply _)
-  }
-
-  class OauthAuthorizationCodeTable(tag: Tag)
-      extends BaseTable[DBOauthAuthorizationCode](
-        tag,
-        "oauth_authorization_codes"
-      ) {
-
-    val accountId = column[Long]("account_id")
-    val oauthClientId = column[Long]("oauth_client_id")
-    val code = column[String]("code")
-    val redirectUri = column[String]("redirect_uri")
-    def * =
-      (
-        id,
-        accountId,
-        oauthClientId,
-        code,
-        redirectUri.?,
-        createdAt,
-        updatedAt
-      ) <> (DBOauthAuthorizationCode.tupled, DBOauthAuthorizationCode.unapply _)
-  }
-
-  class OAuthAccessTokenTable(tag: Tag)
-      extends BaseTable[DBOAuthAccessToken](
-        tag,
-        "oauth_access_token"
-      ) {
-    val accountId = column[Long]("account_id")
-    val oauthClientId = column[Long]("account_client_id")
-    val accessToken = column[String]("access_token")
-    val refreshToken = column[String]("refresh_token")
-
-    def * =
-      (
-        id,
-        accountId,
-        oauthClientId,
-        accessToken,
-        refreshToken,
-        createdAt,
-        updatedAt
-      ) <> (DBOAuthAccessToken.tupled, DBOAuthAccessToken.unapply _)
   }
 
   class LoginInfos(tag: Tag) extends BaseTable[DBLoginInfo](tag, "logininfo") {
@@ -194,9 +127,6 @@ class V1_2__new extends BaseJavaMigration {
   }
 
   val userTable = TableQuery[UserTable]
-  val oauthClientTable = TableQuery[OauthClientTable]
-  val oauthAuthCoceTable = TableQuery[OauthAuthorizationCodeTable]
-  val oAuthAccessTokenTable = TableQuery[OAuthAccessTokenTable]
   val loginInfoTable = TableQuery[LoginInfos]
   val userLoginInfoTable = TableQuery[UserLoginInfos]
   val passwordInfoTable = TableQuery[PasswordInfos]
@@ -210,32 +140,7 @@ class V1_2__new extends BaseJavaMigration {
     _.createdAt,
     _.updatedAt
   )
-  val m2 = TableMigration(oauthClientTable).create.addColumns(
-    _.id,
-    _.ownerId,
-    _.grantType,
-    _.clientId,
-    _.clientSecret,
-    _.createdAt,
-    _.updatedAt
-  )
-  val m3 = TableMigration(oauthAuthCoceTable).create.addColumns(
-    _.id,
-    _.accountId,
-    _.code,
-    _.oauthClientId,
-    _.redirectUri,
-    _.createdAt,
-    _.updatedAt
-  )
-  val m4 = TableMigration(oAuthAccessTokenTable).create.addColumns(
-    _.id,
-    _.accountId,
-    _.accessToken,
-    _.refreshToken,
-    _.createdAt,
-    _.updatedAt
-  )
+
   val m5 = TableMigration(loginInfoTable).create.addColumns(
     _.id,
     _.providerID,
@@ -284,9 +189,6 @@ class V1_2__new extends BaseJavaMigration {
 
     val actions = (for {
       _ <- m1()
-      _ <- m2()
-      _ <- m3()
-      _ <- m4()
       _ <- m5()
       _ <- m6()
       _ <- m7()

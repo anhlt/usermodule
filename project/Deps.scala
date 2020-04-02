@@ -16,6 +16,7 @@ object Deps {
   val playVersion = "2.7.3"
   val silhouetteVersion = "6.1.0"
   val playMailerVersion = "8.0.0"
+  val oauthVersion = "1.5.0"
 
   lazy val avro = "org.apache.avro" % "avro" % avroVersion
   lazy val avroSerializer = "io.confluent" % "kafka-avro-serializer" % avroSerializerVersion
@@ -47,9 +48,9 @@ object Deps {
   lazy val flyway = "org.flywaydb" %% "flyway-play" % flywayVersion
   lazy val slickMigrationFlyway = "io.github.nafg" %% "slick-migration-api-flyway" % slickMigrationFlywayVersion
   lazy val ficus = "com.iheart" %% "ficus" % "1.4.7"
-  lazy val oauth2Core = "com.nulab-inc" %% "scala-oauth2-core" % "1.4.0"
-  lazy val oauth2Provider = "com.nulab-inc" %% "play2-oauth2-provider" % "1.4.2"
-  lazy val bs3 =  "com.adrianhurt" %% "play-bootstrap3" % "1.5.1-P27-B3"
+  lazy val bs3 = "com.adrianhurt" %% "play-bootstrap3" % "1.5.1-P27-B3"
   lazy val playMailer = "com.typesafe.play" %% "play-mailer" % playMailerVersion
   lazy val playMailerGuice = "com.typesafe.play" %% "play-mailer-guice" % playMailerVersion
+  lazy val scalaOauthCore = "com.nulab-inc" %% "scala-oauth2-core" % oauthVersion
+  lazy val playOauth2Provider = "com.nulab-inc" %% "play2-oauth2-provider" % oauthVersion
 }

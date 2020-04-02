@@ -22,37 +22,6 @@ case class DBUserRoles(
 
 case class AuthToken(token: UUID, userID: UUID, expiry: DateTime)
 
-case class DBOAuthAccessToken(
-    id: UUID,
-    accountId: Long,
-    oauthClientId: Long,
-    accessToken: String,
-    refreshToken: String,
-    updatedAt: DateTime,
-    createdAt: DateTime
-) extends Entity
-
-case class DBOauthAuthorizationCode(
-    id: UUID,
-    accountId: Long,
-    oauthClientId: Long,
-    code: String,
-    redirectUri: Option[String],
-    updatedAt: DateTime,
-    createdAt: DateTime
-) extends Entity
-
-case class DBOauthClient(
-    id: UUID,
-    ownerId: Long,
-    grantType: String,
-    clientId: String,
-    clientSecret: String,
-    redirectUri: Option[String],
-    updatedAt: DateTime,
-    createdAt: DateTime
-) extends Entity
-
 case class DBLoginInfo(
     id: UUID,
     providerID: String,
@@ -96,3 +65,31 @@ case class DBOAuth2Info(
     updatedAt: DateTime,
     createdAt: DateTime
 ) extends Entity
+
+case class DBOauthClient(
+    id: UUID,
+    ownerId: UUID,
+    grantType: String,
+    clientId: String,
+    clientSecret: String,
+    redirectUri: Option[String],
+    createdAt: DateTime
+)
+
+case class DBOauthAuthorizationCode(
+    id: UUID,
+    userId: UUID,
+    oauthClientId: UUID,
+    code: String,
+    redirectUri: Option[String],
+    createdAt: DateTime
+)
+
+case class DBOauthAccessToken(
+    id: UUID,
+    userId: UUID,
+    oauthClientId: UUID,
+    accessToken: String,
+    refreshToken: String,
+    createdAt: DateTime
+)
