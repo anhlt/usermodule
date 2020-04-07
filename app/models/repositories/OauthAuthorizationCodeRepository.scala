@@ -22,10 +22,16 @@ import java.{util => ju}
 import scalaoauth2.provider.AccessToken
 import scalaoauth2.provider.AuthInfo
 import com.mohiva.play.silhouette.api.LoginInfo
+import db.DBOauthAuthorizationCode
 
 trait OauthAuthorizationCodeRepository {
 
   def delete(codeValue: String): Future[Unit]
+  def create(
+      user: User,
+      clientId: UUID,
+      redirectUri: Option[String]
+  ): Future[DBOauthAuthorizationCode]
 
 }
 
@@ -47,6 +53,32 @@ class OauthAuthorizationCodeRepositoryImpl @Inject()(
     } yield authCode).delete
 
     db.run(query).map(_ => {})
+  }
+
+  def randomString(len: Int) =
+    new Random(new SecureRandom()).alphanumeric.take(len).mkString
+
+  override def create(
+      user: User,
+      clientId: UUID,
+      redirectUri: Option[String]
+  ): Future[DBOauthAuthorizationCode] = {
+    val authorizationCode = DBOauthAuthorizationCode(
+      id = ju.UUID.randomUUID(),
+      userId = user.id,
+      oauthClientId = clientId,
+      code = randomString(40),
+      redirectUri = redirectUri,
+      createdAt = new DateTime()
+    )
+
+    val action = (for {
+      _ <- slickSAuthorizationCodes += authorizationCode
+
+    } yield ())
+
+    db.run(action).map(_ => authorizationCode)
+
   }
 
 }

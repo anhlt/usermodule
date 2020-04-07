@@ -3,7 +3,11 @@ import play.api.libs.json._
 import models.entities.User
 
 object JsonWriters {
-  implicit val flowerMeaningInfoNative2Json = Json.writes[models.entities.User]
+  implicit val userInfoJsonWriter = Json.writes[models.entities.User]
+  implicit val oauthClientResponseJsonWriter = Json.writes[OauthClientResponse]
+  implicit val oauthAuthorizationCodeResponseJsonWriter =
+    Json.writes[OauthAuthorizationCodeResponse]
+
   implicit def searchResultsWrites[T](
       implicit fmt: Writes[T]
   ): Writes[PagingResponse[T]] = new Writes[PagingResponse[T]] {
@@ -40,4 +44,13 @@ case class PagingResponse[T](
     page: Int,
     pageSize: Int,
     total: Int
+)
+
+case class OauthClientResponse(
+    name: String,
+    description: String
+)
+
+case class OauthAuthorizationCodeResponse(
+    code: String
 )

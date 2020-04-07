@@ -73,6 +73,8 @@ case class DBOauthClient(
     clientId: String,
     clientSecret: String,
     redirectUri: Option[String],
+    clientName: String,
+    clientDescription: String,
     createdAt: DateTime
 )
 

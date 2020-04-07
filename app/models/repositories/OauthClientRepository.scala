@@ -6,13 +6,7 @@ import com.google.inject._
 import java.util.UUID
 
 import db.TableDefinitions
-import db.{
-  DBUser,
-  DBLoginInfo,
-  DBUserLoginInfo,
-  DBPasswordInfo,
-  DBOauthClient
-}
+import db.{DBUser, DBLoginInfo, DBUserLoginInfo, DBPasswordInfo, DBOauthClient}
 
 trait OauthClientRepository {
 
@@ -26,6 +20,11 @@ trait OauthClientRepository {
   def findClientCredentials(
       clientId: String,
       clientSecret: String
+  ): Future[Option[DBOauthClient]]
+
+  def findByIdAndRedirectUri(
+      clientId: String,
+      redirectUri: String
   ): Future[Option[DBOauthClient]]
 }
 
@@ -62,6 +61,22 @@ class OauthClientRepositoryImpl @Inject()(
     db.run(
       slickSClients
         .filter(sclient => sclient.clientId === clientId)
+        .result
+        .headOption
+    )
+  }
+
+  def findByIdAndRedirectUri(
+      clientId: String,
+      redirectUri: String
+  ): Future[Option[DBOauthClient]] = {
+    db.run(
+      slickSClients
+        .filter(
+          sclient =>
+            sclient.clientId === clientId &&
+              sclient.redirectUri === redirectUri
+        )
         .result
         .headOption
     )

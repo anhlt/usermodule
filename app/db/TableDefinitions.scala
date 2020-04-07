@@ -42,7 +42,6 @@ class TableDefinitions @Inject()(
     def * = (token, userId, expiry) <> (AuthToken.tupled, AuthToken.unapply)
   }
 
-
   class LoginInfos(tag: Tag) extends BaseTable[DBLoginInfo](tag, "logininfo") {
     def providerID = column[String]("providerID")
     def providerKey = column[String]("providerKey")
@@ -112,14 +111,17 @@ class TableDefinitions @Inject()(
       (userId, role, createdAt, updatedAt) <> (DBUserRoles.tupled, DBUserRoles.unapply)
   }
 
-  class ServerOauthClientTable(tag: Tag)
-      extends Table[DBOauthClient](tag, "oathserver_oauth_client") {
+  class OauthClientTable(tag: Tag)
+      extends Table[DBOauthClient](tag, "oauth_client") {
 
     def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
     val ownerId = column[UUID]("owner_id", O.SqlType("varchar(255)"))
     val grantType = column[String]("grant_type")
     val clientId = column[String]("client_id")
     val clientSecret = column[String]("client_secret")
+    val clientName = column[String]("client_name")
+    val clientDescription =
+      column[String]("client_description", O.SqlType("varchar(255)"))
     val redirectUri = column[String]("ridirect_uri")
     val createdAt =
       column[DateTime]("created_date", O.SqlType("timestamp default now()"))
@@ -132,15 +134,17 @@ class TableDefinitions @Inject()(
         clientId,
         clientSecret,
         redirectUri.?,
+        clientName,
+        clientDescription,
         createdAt
       ) <> (DBOauthClient.tupled, DBOauthClient.unapply)
 
   }
 
-  class ServerOauthAuthorizationCodeTable(tag: Tag)
+  class OauthAuthorizationCodeTable(tag: Tag)
       extends Table[DBOauthAuthorizationCode](
         tag,
-        "oathserver_oauth_authorization_code"
+        "oauth_authorization_code"
       ) {
 
     def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
@@ -165,10 +169,10 @@ class TableDefinitions @Inject()(
 
   }
 
-  class ServerOauthAccessTokenTable(tag: Tag)
+  class OauthAccessTokenTable(tag: Tag)
       extends Table[DBOauthAccessToken](
         tag,
-        "oathserver_oauth_authorization_code"
+        "oauth_access_token"
       ) {
 
     def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
@@ -203,9 +207,9 @@ class TableDefinitions @Inject()(
   val slickAuthTokens = TableQuery[AuthTokens]
   val slickUserRoles = TableQuery[UserRoles]
 
-  val slickSClients = TableQuery[ServerOauthClientTable]
-  val slickSAuthorizationCodes = TableQuery[ServerOauthAuthorizationCodeTable]
-  val slickSAccessTokenTable = TableQuery[ServerOauthAccessTokenTable]
+  val slickSClients = TableQuery[OauthClientTable]
+  val slickSAuthorizationCodes = TableQuery[OauthAuthorizationCodeTable]
+  val slickSAccessTokenTable = TableQuery[OauthAccessTokenTable]
 
   def loginInfoQuery(loginInfo: LoginInfo) =
     slickLoginInfos.filter(

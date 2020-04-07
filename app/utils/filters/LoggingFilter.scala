@@ -20,10 +20,10 @@ class LoggingFilter @Inject()(
     nextFilter(requestHeader).map { result =>
       val endTime = System.currentTimeMillis
       val requestTime = endTime - startTime
-      logger.info(s"${requestHeader.headers.toMap}")
-      logger.info(
-        s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status}"
-      )
+      // logger.info(s"${requestHeader.headers.toMap}")
+      // logger.info(
+      //   s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status}"
+      // )
 
       result.withHeaders("Request-Time" -> requestTime.toString)
     }

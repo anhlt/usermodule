@@ -2,10 +2,6 @@ package controllers.api.v1
 
 import com.google.inject._
 import com.mohiva.play.silhouette.api._
-import com.mohiva.play.silhouette.api.exceptions.ProviderException
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.util.{Clock, Credentials}
-import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers._
 import utils.auth.DefaultEnv
 import scala.concurrent.Future
@@ -18,8 +14,6 @@ import play.api.mvc.{
   Request
 }
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
-import models.entities.User
-import utils.auth.Role
 import play.api.libs.json._
 import utils.response.JsonWriters._
 import utils.response._

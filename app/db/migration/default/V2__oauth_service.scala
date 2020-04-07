@@ -17,7 +17,7 @@ import java.util.UUID
 import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration._
 
-class V2_oauth_service extends BaseJavaMigration {
+class V2__oauth_service extends BaseJavaMigration {
 
   implicit val dialect = GenericDialect(CustomMySqlProfile)
   lazy val db = Database.forConfig("db.default")
@@ -51,7 +51,7 @@ class V2_oauth_service extends BaseJavaMigration {
   )
 
   class ServerOauthClientTable(tag: Tag)
-      extends Table[ServerOauthClient](tag, "oathserver_oauth_client") {
+      extends Table[ServerOauthClient](tag, "oauth_client") {
 
     def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
     val ownerId = column[UUID]("owner_id", O.SqlType("varchar(255)"))
@@ -78,7 +78,7 @@ class V2_oauth_service extends BaseJavaMigration {
   class ServerOauthAuthorizationCodeTable(tag: Tag)
       extends Table[ServerOauthAuthorizationCode](
         tag,
-        "oathserver_oauth_authorization_code"
+        "oauth_authorization_code"
       ) {
 
     def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
@@ -106,7 +106,7 @@ class V2_oauth_service extends BaseJavaMigration {
   class ServerOauthAccessTokenTable(tag: Tag)
       extends Table[ServerOauthAccessToken](
         tag,
-        "oathserver_oauth_authorization_code"
+        "oauth_access_token"
       ) {
 
     def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
@@ -156,9 +156,9 @@ class V2_oauth_service extends BaseJavaMigration {
 
   val m3 = TableMigration(clientTable).create.addColumns(
     _.id,
+    _.ownerId,
     _.grantType,
     _.clientId,
-    _.clientSecret,
     _.clientSecret,
     _.redirectUri,
     _.createdAt
