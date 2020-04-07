@@ -15,5 +15,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 GET         /account/email/:email            controllers.ActivateAccountController.send(email: String)
 GET         /account/activate/:token         controllers.ActivateAccountController.activate(token: java.util.UUID)
+GET         /account/activate/:token         controllers.ActivateAccountController.activate(token: java.util.UUID)
+POST        /oauth2/access_token             controllers.OAuth2Controller.accessToken
 
 ->          /api/v1                          api.v1.Routes

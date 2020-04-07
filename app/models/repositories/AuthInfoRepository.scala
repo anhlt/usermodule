@@ -41,7 +41,7 @@ trait AuthInfoRepository {
 class AuthInfoRepositoryImpl @Inject()(
     val tableDefinations: TableDefinitions,
     ex: ExecutionContext
-) {
+) extends AuthInfoRepository {
 
   implicit val exc = ex
   import tableDefinations._
@@ -165,7 +165,7 @@ class AuthInfoRepositoryImpl @Inject()(
                 redirectUri = None
               )
           )
-
+        case rs @ None => None
       })
   }
 

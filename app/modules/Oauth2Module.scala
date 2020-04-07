@@ -22,7 +22,8 @@ import models.services.{
   AuthTokenServiceImpl,
   MailService,
   DumpMailService,
-  SMTPMailService
+  SMTPMailService,
+  Oauth2DataHandler
 }
 import scala.concurrent.ExecutionContext.Implicits.global
 import db.base.{DBConfiguration, CustomMySqlProfile}
@@ -45,7 +46,6 @@ class Oauth2Module extends AbstractModule {
 
   override def configure(): Unit = {
 
-
     bind(classOf[MailService]).to(classOf[SMTPMailService])
     bind(classOf[OauthClientRepository]).to(classOf[OauthClientRepositoryImpl])
     bind(classOf[OauthAuthorizationCodeRepository])
@@ -54,6 +54,8 @@ class Oauth2Module extends AbstractModule {
     bind(classOf[OauthAuthorizationCodeRepository])
       .to(classOf[OauthAuthorizationCodeRepositoryImpl])
     bind(classOf[AuthTokenService]).to(classOf[AuthTokenServiceImpl])
+
+    bind(classOf[AuthInfoRepository]).to(classOf[AuthInfoRepositoryImpl])
 
   }
 
