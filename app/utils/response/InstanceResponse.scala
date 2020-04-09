@@ -52,5 +52,6 @@ case class OauthClientResponse(
 )
 
 case class OauthAuthorizationCodeResponse(
-    code: String
+    code: String,
+    redirectUri: String
 )

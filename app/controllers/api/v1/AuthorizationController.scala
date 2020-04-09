@@ -28,6 +28,7 @@ import forms.ClientAuthorizeForm
 import forms.BaseForm._
 import play.api.libs.json.{JsValue, Json, Writes}
 import models.entities.User
+import java.net.URI
 // client_id=773
 // redirect_uri=http:%2F%2Flocalhost%2Fmendeley%2Fserver_sample.php
 // response_type=code
@@ -44,9 +45,9 @@ class AuthorizationController @Inject()(
     with Logging {
 
   def clientInfo(
-      clientId: String,
-      redirectUri: String,
-      responseType: String,
+      client_id: String,
+      redirect_uri: String,
+      response_type: String,
       state: Option[String]
   ) =
     silhouette.SecuredAction.async({
@@ -54,9 +55,8 @@ class AuthorizationController @Inject()(
         DefaultEnv,
         play.api.mvc.AnyContent
       ] =>
-        logger.info(s"clientId: ${clientId} ${redirectUri}")
         oauthClientRepository
-          .findByIdAndRedirectUri(clientId, redirectUri)
+          .findByIdAndRedirectUri(client_id, redirect_uri)
           .map({ maybeClient =>
             maybeClient match {
               case Some(client) =>
@@ -81,6 +81,14 @@ class AuthorizationController @Inject()(
           })
     })
 
+  def uri(url: String, code: String, state: Option[String]): URI = {
+    val enc = (p: String) => java.net.URLEncoder.encode(p, "utf-8")
+    new java.net.URI(
+      if (state.isDefined) s"${url}?code=${code}&state=${state.get}"
+      else s"${url}?code=${code}"
+    )
+  }
+
   def authorize =
     silhouette.SecuredAction.async {
       implicit request: SecuredRequest[DefaultEnv, play.api.mvc.AnyContent] =>
@@ -94,19 +102,27 @@ class AuthorizationController @Inject()(
 
               oauthClientRepository
                 .findByIdAndRedirectUri(
-                  data.clientId,
-                  data.redirectUri.getOrElse("")
+                  data.client_id,
+                  data.redirect_uri.getOrElse("")
                 )
                 .flatMap({
                   case Some(client) => {
                     oauthAuthorizationCodeRepository
-                      .create(currentUser, client.id, data.redirectUri)
+                      .create(currentUser, client.id, data.redirect_uri)
                       .map(
                         code =>
                           Ok(
                             Json.toJson(
                               InstanceRespone(
-                                OauthAuthorizationCodeResponse(code.code)
+                                OauthAuthorizationCodeResponse(
+                                  code.code,
+                                  uri(
+                                    code.redirectUri
+                                      .getOrElse(""),
+                                    code.code,
+                                    data.state
+                                  ).toString
+                                )
                               )
                             )
                           )

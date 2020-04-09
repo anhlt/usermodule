@@ -9,9 +9,10 @@ object ClientAuthorizeForm {
     */
   val form = Form(
     mapping(
-      "clientId" -> nonEmptyText,
-      "redirectUri" -> optional(text),
-      "responseType" -> nonEmptyText
+      "client_id" -> nonEmptyText,
+      "redirect_uri" -> optional(text),
+      "response_type" -> nonEmptyText,
+      "state" -> optional(text)
     )(ClientAuthorizeData.apply)(ClientAuthorizeData.unapply)
   )
 
@@ -23,8 +24,9 @@ object ClientAuthorizeForm {
     * @param rememberMe Indicates if the user should stay logged in on the next visit.
     */
   case class ClientAuthorizeData(
-      clientId: String,
-      redirectUri: Option[String],
-      responseType: String
+      client_id: String,
+      redirect_uri: Option[String],
+      response_type: String,
+      state: Option[String]
   )
 }
