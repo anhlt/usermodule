@@ -88,8 +88,6 @@ class SilhouetteModule extends AbstractModule {
       override val driver = CustomMySqlProfile
     })
     bind(classOf[TableDefinitions])
-    bind(classOf[MailService]).to(classOf[SMTPMailService])
-    bind(classOf[AuthTokenService]).to(classOf[AuthTokenServiceImpl])
 
   }
   @Provides

@@ -16,9 +16,6 @@ import scala.concurrent.ExecutionContext
 
 import db.{
   DBUser,
-  DBOauthClient,
-  DBOAuthAccessToken,
-  DBOauthAuthorizationCode,
   DBLoginInfo,
   DBUserLoginInfo,
   DBPasswordInfo,

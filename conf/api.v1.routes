@@ -2,3 +2,5 @@ GET         /user                        controllers.api.v1.Users.user
 POST        /user_register               controllers.api.v1.UserRegisterController.submit
 POST        /login                       controllers.api.v1.UserLoginController.submit
 POST        /logout                      controllers.api.v1.UserLogoutController.submit
+GET         /client_info                 controllers.api.v1.AuthorizationController.clientInfo(client_id: String, redirect_uri: String, response_type: String, state: Option[String])
+POST        /authorize                   controllers.api.v1.AuthorizationController.authorize

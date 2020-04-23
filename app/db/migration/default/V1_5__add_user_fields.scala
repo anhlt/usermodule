@@ -16,9 +16,6 @@ import scala.concurrent.ExecutionContext
 
 import db.{
   DBUser,
-  DBOauthClient,
-  DBOAuthAccessToken,
-  DBOauthAuthorizationCode,
   DBLoginInfo,
   DBUserLoginInfo,
   DBPasswordInfo,
@@ -37,7 +34,18 @@ class V1_5__add_user_fields extends BaseJavaMigration {
   implicit val dialect = GenericDialect(CustomMySqlProfile)
   lazy val db = Database.forConfig("db.default")
 
-  class UserTable(tag: Tag) extends Table[(UUID, String, Option[String], Option[String], Boolean, DateTime, DateTime)](tag, "users") {
+  class UserTable(tag: Tag)
+      extends Table[
+        (
+            UUID,
+            String,
+            Option[String],
+            Option[String],
+            Boolean,
+            DateTime,
+            DateTime
+        )
+      ](tag, "users") {
 
     def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
     val email = column[String]("email")
@@ -66,7 +74,7 @@ class V1_5__add_user_fields extends BaseJavaMigration {
 
   val m1 = TableMigration(userTable).addColumns(
     _.username,
-    _.nickname,
+    _.nickname
   )
 
   def migrate(context: Context): Unit = {
