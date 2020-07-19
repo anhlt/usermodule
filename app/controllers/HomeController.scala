@@ -1,5 +1,6 @@
 package controllers
 
+import services.{AuthTokenService, MailService, UserService}
 import socket.IotSocketActor
 import com.google.inject._
 import play.api._
@@ -19,7 +20,6 @@ import play.api.mvc.{
   ControllerComponents,
   Request
 }
-import models.services.{AuthTokenService, MailService, UserService}
 
 import utils.auth.DefaultEnv
 

@@ -15,7 +15,7 @@ import play.api.{Configuration}
 import play.api.libs.ws.WSClient
 import play.api.mvc.Cookie
 import utils.auth.DefaultEnv
-import models.services.{
+import services.{
   UserService,
   UserServiceImpl,
   AuthTokenService,

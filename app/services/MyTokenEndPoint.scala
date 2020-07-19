@@ -1,4 +1,4 @@
-package models.services
+package services
 
 import scalaoauth2.provider.TokenEndpoint
 import scalaoauth2.provider.AuthorizationCode

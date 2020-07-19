@@ -1,4 +1,4 @@
-package models.services
+package services
 import forms.SignUpForm
 import com.google.inject._
 

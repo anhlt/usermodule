@@ -1,4 +1,4 @@
-package models.services
+package services
 
 import models.entities.User
 import db.{TableDefinitions}

@@ -1,5 +1,6 @@
 package controllers.api.v1
 
+import services.UserService
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
@@ -8,7 +9,6 @@ import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers._
 import forms.SignInForm
 import javax.inject.Inject
-import models.services.UserService
 import play.api.Configuration
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json

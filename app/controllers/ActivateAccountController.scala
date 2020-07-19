@@ -2,11 +2,10 @@ package controllers
 
 import java.net.URLDecoder
 import java.util.UUID
-
+import services.{AuthTokenService, MailService, UserService}
 import com.google.inject._
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
-import models.services.{AuthTokenService, MailService, UserService}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import utils.auth.DefaultEnv
 

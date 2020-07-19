@@ -1,5 +1,15 @@
 package modules
 
+
+import services.{
+  UserService,
+  UserServiceImpl,
+  AuthTokenService,
+  AuthTokenServiceImpl,
+  MailService,
+  DumpMailService,
+  SMTPMailService
+}
 import com.google.inject._
 import com.google.inject.name.Named
 import com.mohiva.play.silhouette.api.crypto._
@@ -57,15 +67,6 @@ import play.api.{Configuration}
 import play.api.libs.ws.WSClient
 import play.api.mvc.Cookie
 import utils.auth.DefaultEnv
-import models.services.{
-  UserService,
-  UserServiceImpl,
-  AuthTokenService,
-  AuthTokenServiceImpl,
-  MailService,
-  DumpMailService,
-  SMTPMailService
-}
 import scala.concurrent.ExecutionContext.Implicits.global
 import db.base.{DBConfiguration, CustomMySqlProfile}
 

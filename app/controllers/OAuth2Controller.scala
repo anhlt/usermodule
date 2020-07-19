@@ -1,4 +1,7 @@
 package controllers
+
+
+import services.{MyTokenEndpoint, Oauth2DataHandler}
 import models._
 import play.api._
 import play.api.data._
@@ -17,7 +20,6 @@ import play.api.mvc.{
 }
 import scalaoauth2.provider.OAuth2Provider
 import scalaoauth2.provider.TokenEndpoint
-import models.services.{MyTokenEndpoint, Oauth2DataHandler}
 import scala.concurrent.ExecutionContext
 
 class OAuth2Controller @Inject()(

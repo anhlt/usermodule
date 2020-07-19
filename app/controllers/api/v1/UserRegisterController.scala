@@ -1,7 +1,7 @@
 package controllers.api.v1
 
 import java.util.UUID
-
+import services.{AuthTokenService, MailService, UserService}
 import javax.inject.Inject
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
@@ -9,7 +9,6 @@ import com.mohiva.play.silhouette.api.util.PasswordHasherRegistry
 import com.mohiva.play.silhouette.impl.providers._
 import forms.SignUpForm
 import models.entities.User
-import models.services.{AuthTokenService, MailService, UserService}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{
   AbstractController,

@@ -1,4 +1,4 @@
-package models.services
+package services
 import play.api.libs.mailer._
 import com.google.inject._
 import play.api.Logging
