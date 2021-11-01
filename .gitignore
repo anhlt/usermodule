@@ -55,3 +55,4 @@ server.pid
 /dist/
 .cache
 .envrc
+./null
