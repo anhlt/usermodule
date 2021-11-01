@@ -56,3 +56,5 @@ server.pid
 .cache
 .envrc
 ./null
+project/.bloop
+.vscode/

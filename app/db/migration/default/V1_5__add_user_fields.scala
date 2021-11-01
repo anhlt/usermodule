@@ -1,7 +1,7 @@
 package db.migration.default
 
-import db.base.CustomMySqlProfile
-import db.base.CustomMySqlProfile.api._
+import db.base.CustomProfile
+import db.base.CustomProfile.api._
 import slick.migration.api._
 import slick.migration.api.flyway._
 import slick.migration.api.flyway.UnmanagedDatabase
@@ -31,7 +31,7 @@ import scala.concurrent.duration._
 import java.util.UUID
 
 class V1_5__add_user_fields extends BaseJavaMigration {
-  implicit val dialect = GenericDialect(CustomMySqlProfile)
+  implicit val dialect = GenericDialect(CustomProfile)
   lazy val db = Database.forConfig("db.default")
 
   class UserTable(tag: Tag)

@@ -3,8 +3,8 @@ import java.sql.{PreparedStatement, ResultSet}
 
 import slick.ast._
 
-import slick.jdbc.MySQLProfile
-object CustomMySqlProfile extends MySQLProfile {
+import slick.jdbc.PostgresProfile
+object CustomProfile extends PostgresProfile{
   import java.util.UUID
 
   override val columnTypes = new JdbcTypes

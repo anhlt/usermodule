@@ -68,7 +68,7 @@ import play.api.libs.ws.WSClient
 import play.api.mvc.Cookie
 import utils.auth.DefaultEnv
 import scala.concurrent.ExecutionContext.Implicits.global
-import db.base.{DBConfiguration, CustomMySqlProfile}
+import db.base.{DBConfiguration, CustomProfile}
 
 import db.{TableDefinitions}
 import akka.actor.ActorSystem
@@ -86,7 +86,7 @@ class SilhouetteModule extends AbstractModule {
     bind(classOf[Clock]).toInstance(Clock())
 
     bind(classOf[DBConfiguration]).toInstance(new DBConfiguration {
-      override val driver = CustomMySqlProfile
+      override val driver = CustomProfile
     })
     bind(classOf[TableDefinitions])
 

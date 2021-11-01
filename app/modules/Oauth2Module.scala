@@ -26,7 +26,7 @@ import services.{
   Oauth2DataHandler
 }
 import scala.concurrent.ExecutionContext.Implicits.global
-import db.base.{DBConfiguration, CustomMySqlProfile}
+import db.base.{DBConfiguration, CustomProfile}
 
 import db.{TableDefinitions}
 import akka.actor.ActorSystem

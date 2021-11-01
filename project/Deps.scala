@@ -27,7 +27,6 @@ object Deps {
   lazy val jodaConvert = "org.joda" % "joda-convert" % "1.7"
   lazy val typesafeConfig = "com.typesafe" % "config" % "1.3.4"
   lazy val mysql = "mysql" % "mysql-connector-java" % mysqlVersion
-  lazy val mysql = "mysql" % "mysql-connector-java" % mysqlVersion
   lazy val postgresql =  "org.postgresql" % "postgresql" % postgresqlVersion
   lazy val play = "com.typesafe.play" %% "play" % playVersion
   lazy val silhouette = "com.mohiva" %% "play-silhouette" % "6.1.0"
