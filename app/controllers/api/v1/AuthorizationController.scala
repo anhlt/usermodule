@@ -93,7 +93,7 @@ class AuthorizationController @Inject()(
     silhouette.SecuredAction.async {
       implicit request: SecuredRequest[DefaultEnv, play.api.mvc.AnyContent] =>
         ClientAuthorizeForm.form
-          .bindFromRequest()(request.request)
+          .bindFromRequest()(request)
           .fold(
             formWithError =>
               Future.successful(BadRequest(Json.toJson(formWithError.errors))),

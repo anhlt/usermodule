@@ -26,6 +26,8 @@
 
   <logger name="play" level="INFO" />
   <logger name="application" level="DEBUG" />
+  <logger name="org.jdbcdslog.StatementLogger"  level="INFO" /> <!-- Will log all statements -->
+
 
   <root level="INFO">
     <appender-ref ref="ASYNCFILE" />

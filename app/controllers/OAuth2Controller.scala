@@ -7,7 +7,7 @@ import play.api._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
-import play.api.Play.current
+import play.api.Play._
 import play.api.mvc.BodyParsers._
 import play.api.libs.json.Json
 import play.api.libs.json.Json._

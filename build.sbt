@@ -1,18 +1,19 @@
 import Deps._
-resolvers += Resolver.jcenterRepo
-resolvers += Resolver.bintrayRepo("naftoligug", "maven")
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
   .settings(
     inThisBuild(
       List(
-        scalaVersion := "2.12.10",
+        scalaVersion := "2.12.15",
         name := """h3ck3rn3w""",
         organization := "h3ck3rn3w.io",
         version := "1.0",
+        resolvers ++=
+          Seq(
+            "Atlassian's Maven Public Repository" at "https://packages.atlassian.com/maven-public/"
+          ),
         libraryDependencies ++= Seq(
           play,
-          ficus,
           guice,
           slick,
           slickHikaricp,
@@ -20,11 +21,9 @@ lazy val root = (project in file("."))
           jodaConvert,
           jodaTime,
           jdbc,
-          h2,
           mysql,
           scalaTestPlay,
           flyway,
-          mqtt,
           slickMigrationFlyway,
           silhouette,
           silhouetteBcrypt,
@@ -34,12 +33,13 @@ lazy val root = (project in file("."))
           playMailer,
           playMailerGuice,
           scalaOauthCore,
-          playOauth2Provider
+          playOauth2Provider,
+          ficus
         )
       )
     ),
-    fork in (Compile, run) := true,
-    javaOptions in (Compile, run) += "-Dhttp.address=0.0.0.0"
+    Compile / run / fork := true,
+    Compile/ run / javaOptions += "-Dhttp.address=0.0.0.0"
   )
 
 routesGenerator := InjectedRoutesGenerator
