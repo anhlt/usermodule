@@ -43,4 +43,5 @@ object Deps {
   lazy val scalaOauthCore = "com.nulab-inc" %% "scala-oauth2-core" % oauthVersion
   lazy val playOauth2Provider = "com.nulab-inc" %% "play2-oauth2-provider" % oauthVersion
   lazy val ficus = "com.iheart" %% "ficus" % ficusVersion
+  lazy val swaggerUI = "org.webjars" % "swagger-ui" % "3.52.5"
 }

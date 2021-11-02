@@ -1,4 +1,29 @@
+###
+#  summary: get user infomation
+#  tags:
+#    - Registration
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.entities.User'
+###
 GET         /user                        controllers.api.v1.Users.user
+
+###
+#  summary: create user
+#  tags:
+#    - Registration
+#  parameters:
+#    - name: body
+#      schema: 
+#        $ref: '#/definitions/forms.SignUpForm.Data'
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.entities.User'
+###
 POST        /user_register               controllers.api.v1.UserRegisterController.submit
 POST        /login                       controllers.api.v1.UserLoginController.submit
 POST        /logout                      controllers.api.v1.UserLogoutController.submit

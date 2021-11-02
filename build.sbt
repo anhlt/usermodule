@@ -1,11 +1,10 @@
 import Deps._
 lazy val root = (project in file("."))
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala, SwaggerPlugin)
   .settings(
     inThisBuild(
       List(
         scalaVersion := "2.12.15",
-        name := """h3ck3rn3w""",
         organization := "h3ck3rn3w.io",
         version := "1.0",
         resolvers ++=
@@ -35,14 +34,18 @@ lazy val root = (project in file("."))
           playMailerGuice,
           scalaOauthCore,
           playOauth2Provider,
-          ficus
+          ficus,
+          swaggerUI
         )
       )
     ),
     Compile / run / fork := true,
-    Compile/ run / javaOptions += "-Dhttp.address=0.0.0.0"
+    Compile / run / javaOptions += "-Dhttp.address=0.0.0.0"
   )
 
+swaggerDomainNameSpaces := Seq("models", "forms")
+swaggerRoutesFile := "routes"
+Assets / WebKeys.exportedMappings := Nil
 routesGenerator := InjectedRoutesGenerator
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "h3ck3rn3w.io.controllers._"
