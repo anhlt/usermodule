@@ -58,3 +58,4 @@ server.pid
 ./null
 project/.bloop
 .vscode/
+.bsp/
