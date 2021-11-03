@@ -29,13 +29,7 @@ class UserRepositoryImp @Inject()(
     * @return The found user or None if no user for the given login info could be found.
     */
   def find(loginInfo: LoginInfo): Future[Option[User]] = {
-    // val userQuery = for {
-    //   dbLoginInfo <- loginInfoQuery(loginInfo)
-    //   dbUserLoginInfo <- slickUserLoginInfos.filter(
-    //     _.loginInfoId === dbLoginInfo.id
-    //   )
-    //   dbUser <- slickUsers.filter(_.id === dbUserLoginInfo.userID)
-    // } yield dbUser
+
 
     val userQuery = for {
       dbLoginInfo <- loginInfoQuery(loginInfo)
@@ -94,8 +88,16 @@ class UserRepositoryImp @Inject()(
     * @return The saved user.
     */
   def save(user: User): Future[User] = {
-    logger.info(s" Save User ${user}")
-    val dbUser = DBUser(user.id, user.email.get, user.username, user.nickname, user.activated)
+    logger.info(s"Save User ${user}")
+
+    val dbUser = DBUser(
+      user.id,
+      user.email.get,
+      user.username,
+      user.nickname,
+      user.activated
+    )
+
     val dbLoginInfo =
       DBLoginInfo(
         ju.UUID.randomUUID(),
@@ -130,11 +132,12 @@ class UserRepositoryImp @Inject()(
             DBIO.successful(x)
           })
           .getOrElse({
-            logger.info("===>")
+            logger.info(s"Insert new LoginInfo: [dbLoginInfo: $dbLoginInfo]")
             insertLoginInfo
           })
       } yield loginInfo
     }
+    
     // combine database actions to be run sequentially
     val actions = (for {
       _ <- slickUsers.insertOrUpdate(dbUser)

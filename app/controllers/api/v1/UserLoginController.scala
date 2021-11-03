@@ -81,7 +81,7 @@ class UserLoginController @Inject()(
                     authenticateUser(user, data.rememberMe)
                   case None =>
                     Future.failed(
-                      new IdentityNotFoundException("Couldn't find user")
+                      new IdentityNotFoundException("Couldn't find user!")
                     )
                 }
             }
