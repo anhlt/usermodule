@@ -64,6 +64,7 @@ lazy val localPackage = project
   )
   .dependsOn(root)
 
+
 lazy val stagePackage = project
   .in(file("build/stage"))
   .enablePlugins(PlayScala, JavaAppPackaging, DockerPlugin)
