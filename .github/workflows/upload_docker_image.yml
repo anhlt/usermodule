@@ -23,9 +23,19 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Env setup-java
+      run: echo "DOCKER_VERSION=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')_${GITHUB_SHA}"
+
+    - name: Test
+      run: echo $DOCKER_VERSION
+
     - name: Build and push Docker Image
       run: sbt stagePackage/docker:publish
       env:
-        DOCKER_IMAGE_HOST: ${{ secrets.DOCKER_IMAGE_HOST }}
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_REPOSITORY: ${{ secrets.DOCKER_REPOSITORY }}
+        DOCKER_IMAGE_HOST: ghcr.io
+        DOCKER_USERNAME: anhlt
+        DOCKER_REPOSITORY: usermodule
+
+        
+
+
