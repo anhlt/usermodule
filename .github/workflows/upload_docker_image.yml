@@ -22,3 +22,6 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Docker Image
+      run: sbt stagePackage/docker:publish
