@@ -68,7 +68,7 @@ lazy val stagePackage = project
   .in(file("build/stage"))
   .enablePlugins(PlayScala, JavaAppPackaging, DockerPlugin)
   .settings(
-    Docker / packageName := sys.env.get("DOCKER_IMAGE_HOST").getOrElse("usermodule") ,
+    Docker / packageName := sys.env.get("DOCKER_REPOSITORY").getOrElse("usermodule") ,
     ThisBuild / dockerRepository := sys.env.get("DOCKER_IMAGE_HOST"),
     ThisBuild / dockerUsername := sys.env.get("DOCKER_USERNAME"),
     Compile / resourceDirectory := (resourceDirectory in (root, Compile)).value,
