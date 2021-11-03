@@ -24,7 +24,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Env setup-java
-      run: echo "DOCKER_VERSION=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')_${GITHUB_SHA}"
+      run: echo "DOCKER_VERSION=PR_$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')_${GITHUB_SHA}"
 
     - name: Test
       run: echo $DOCKER_VERSION
