@@ -26,6 +26,6 @@ jobs:
     - name: Build and push Docker Image
       run: sbt stagePackage/docker:publish
       env:
-        DOCKER_IMAGE_HOST: ${{ secrets.DOCKER_IMAGE_HOST }}
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_REPOSITORY: ${{ secrets.DOCKER_REPOSITORY }}
+        DOCKER_IMAGE_HOST: ghcr.io
+        DOCKER_USERNAME: anhlt
+        DOCKER_REPOSITORY: usermodule
