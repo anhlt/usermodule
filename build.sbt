@@ -43,7 +43,7 @@ lazy val root = (project in file("."))
     Compile / run / javaOptions += "-Dhttp.address=0.0.0.0"
   )
 
-swaggerDomainNameSpaces := Seq("models", "forms")
+swaggerDomainNameSpaces := Seq("models", "forms", "com.mohiva.play.silhouette.api")
 swaggerRoutesFile := "routes"
 Assets / WebKeys.exportedMappings := Nil
 routesGenerator := InjectedRoutesGenerator

@@ -5,6 +5,7 @@ import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import play.api.i18n._
 import play.api.mvc.Request
 import scala.concurrent.Future
+import play.api.libs.json._
 
 case class WithRole(role: Role.Value) extends Authorization[User, JWTAuthenticator] {
   def isAuthorized[B](identity: User, authenticator: JWTAuthenticator)(
@@ -14,14 +15,13 @@ case class WithRole(role: Role.Value) extends Authorization[User, JWTAuthenticat
   }
 
 }
-import play.api.libs.json._
 
 
 object Role extends Enumeration {
 
   type Role = Value
 
-  val Admin = Value("OrdinaryUser")
+  val Admin = Value("Admin")
   val OrdinaryUser = Value("OrdinaryUser")
 
   implicit val myEnumReads = Reads.enumNameReads(Role)
