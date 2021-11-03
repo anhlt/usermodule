@@ -28,3 +28,4 @@ jobs:
       env:
         DOCKER_IMAGE_HOST: ${{ secrets.DOCKER_IMAGE_HOST }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_REPOSITORY: ${{ secrets.DOCKER_REPOSITORY }}
