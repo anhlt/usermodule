@@ -15,6 +15,10 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
 
   "HomeController GET" should {
 
+    "hello" in {
+      assert(1 == 1)
+    }
+
     // "render the index page from a new instance of controller" in {
     //   val controller = inject[HomeController]
     //   val home = controller.index().apply(FakeRequest(GET, "/"))

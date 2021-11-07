@@ -69,13 +69,18 @@ lazy val stagePackage = project
   .in(file("build/stage"))
   .enablePlugins(PlayScala, JavaAppPackaging, DockerPlugin)
   .settings(
-    Docker / packageName := "user_module",
+    Docker / packageName := sys.env.get("DOCKER_REPOSITORY").getOrElse("usermodule") ,
+    Docker / version := sys.env.get("DOCKER_VERSION").getOrElse("staging") ,
     ThisBuild / dockerRepository := sys.env.get("DOCKER_IMAGE_HOST"),
     ThisBuild / dockerUsername := sys.env.get("DOCKER_USERNAME"),
     Compile / resourceDirectory := (resourceDirectory in (root, Compile)).value,
     Universal / mappings += {
       ((Compile / resourceDirectory).value / "application.stg.conf") -> "conf/application.conf"
-    }
+    },
+    Universal / javaOptions ++= Seq(
+      "-Dpidfile.path=/dev/null"
+    ),
+    dockerBaseImage := "adoptopenjdk/openjdk11:debian-slim"
   )
   .dependsOn(root)
 
