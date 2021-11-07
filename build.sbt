@@ -79,7 +79,8 @@ lazy val stagePackage = project
     },
     Universal / javaOptions ++= Seq(
       "-Dpidfile.path=/dev/null"
-    ) 
+    ),
+    dockerBaseImage := "doptopenjdk/openjdk11"
   )
   .dependsOn(root)
 
