@@ -80,7 +80,7 @@ lazy val stagePackage = project
     Universal / javaOptions ++= Seq(
       "-Dpidfile.path=/dev/null"
     ),
-    dockerBaseImage := "doptopenjdk/openjdk11"
+    dockerBaseImage := "adoptopenjdk/openjdk11:debian-slim"
   )
   .dependsOn(root)
 
