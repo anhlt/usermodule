@@ -76,7 +76,10 @@ lazy val stagePackage = project
     Compile / resourceDirectory := (resourceDirectory in (root, Compile)).value,
     Universal / mappings += {
       ((Compile / resourceDirectory).value / "application.stg.conf") -> "conf/application.conf"
-    }
+    },
+    Universal / javaOptions ++= Seq(
+      "-Dpidfile.path=/dev/null"
+    ) 
   )
   .dependsOn(root)
 
