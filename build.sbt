@@ -6,7 +6,7 @@ lazy val root = (project in file("."))
     ThisBuild / organization := "Helloe",
     inThisBuild(
       List(
-        scalaVersion := "2.12.15",
+        scalaVersion := "2.13.7",
         organization := "h3ck3rn3w.io",
         version := "1.0",
         resolvers ++=
@@ -37,6 +37,9 @@ lazy val root = (project in file("."))
           scalaOauthCore,
           playOauth2Provider,
           ficus
+        ),
+        scalacOptions ++= Seq(
+          "-language:postfixOps"
         )
       )
     ),
