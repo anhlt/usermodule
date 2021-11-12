@@ -56,7 +56,7 @@ class UserLoginController @Inject()(
     */
   def submit = silhouette.UnsecuredAction.async {
     implicit request: Request[AnyContent] =>
-      SignInForm.form.bindFromRequest.fold(
+      SignInForm.form.bindFromRequest().fold(
         formWithError => Future.successful(BadRequest(Json.toJson(formWithError.errors))),
         data => {
           val credentials = Credentials(data.email, data.password)
