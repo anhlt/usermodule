@@ -1,9 +1,9 @@
 package db.base
-import java.sql.{PreparedStatement, ResultSet}
-
 import slick.ast._
-
 import slick.jdbc.PostgresProfile
+
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 object CustomProfile extends PostgresProfile{
   import java.util.UUID
 

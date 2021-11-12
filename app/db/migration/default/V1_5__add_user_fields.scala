@@ -1,34 +1,15 @@
 package db.migration.default
 
+import com.github.tototoshi.slick.PostgresJodaSupport._
 import db.base.CustomProfile
 import db.base.CustomProfile.api._
-import slick.migration.api._
-import slick.migration.api.flyway._
-import slick.migration.api.flyway.UnmanagedDatabase
-import org.flywaydb.core.Flyway
-import org.flywaydb.core.api.migration.BaseJavaMigration
-import org.flywaydb.core.api.migration.Context
-import db.base.{DBConfiguration, TableDefinition, Entity}
-
-import com.github.tototoshi.slick.MySQLJodaSupport._
-import scala.reflect.ClassTag
-import scala.concurrent.ExecutionContext
-
-import db.{
-  DBUser,
-  DBLoginInfo,
-  DBUserLoginInfo,
-  DBPasswordInfo,
-  DBOAuth1Info,
-  DBOAuth2Info,
-  AuthToken,
-  DBUserRoles
-}
-
+import org.flywaydb.core.api.migration.{BaseJavaMigration, Context}
 import org.joda.time._
-import scala.concurrent.Await
-import scala.concurrent.duration._
+import slick.migration.api._
+
 import java.util.UUID
+import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.duration._
 
 class V1_5__add_user_fields extends BaseJavaMigration {
   implicit val dialect = GenericDialect(CustomProfile)

@@ -1,27 +1,21 @@
 package controllers.api.v1
 
-import java.util.UUID
 import services.{AuthTokenService, MailService, UserService}
-import javax.inject.Inject
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.PasswordHasherRegistry
 import com.mohiva.play.silhouette.impl.providers._
+import forms.BaseForm._
 import forms.SignUpForm
 import models.entities.User
 import play.api.i18n.I18nSupport
-import play.api.mvc.{
-  AbstractController,
-  AnyContent,
-  ControllerComponents,
-  Request
-}
+import play.api.libs.json.Json
+import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 import utils.auth.DefaultEnv
 
-import scala.concurrent.{ExecutionContext, Future}
-import forms.BaseForm._
-import play.api.libs.json.{JsValue, Json, Writes}
 import java.{util => ju}
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * The `Sign Up` controller.

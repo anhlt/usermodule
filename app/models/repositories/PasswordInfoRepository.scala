@@ -1,16 +1,12 @@
 package models.repositories
+import com.google.inject._
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
-import com.mohiva.play.silhouette.persistence.daos.{
-  DelegableAuthInfoDAO,
-  InMemoryAuthInfoDAO
-}
-import scala.concurrent.{Future, ExecutionContext}
-import scala.reflect.ClassTag
-import com.google.inject._
+import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
+import db.{DBPasswordInfo, TableDefinitions}
 
-import db.TableDefinitions
-import db.{DBUser, DBLoginInfo, DBUserLoginInfo, DBPasswordInfo}
+import scala.concurrent.{ExecutionContext, Future}
+import scala.reflect.ClassTag
 
 class PasswordInfoRepository @Inject()(
     val tableDefinations: TableDefinitions,

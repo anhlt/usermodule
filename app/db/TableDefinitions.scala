@@ -31,7 +31,7 @@ class TableDefinitions @Inject()(
         activated,
         createdAt,
         updatedAt
-      ) <> (DBUser.tupled, DBUser.unapply _)
+      ) <> (DBUser.tupled, DBUser.unapply)
   }
 
   class AuthTokens(tag: Tag) extends Table[AuthToken](tag, "auth_token") {

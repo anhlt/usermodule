@@ -1,29 +1,17 @@
 package controllers
 
-import services.{AuthTokenService, MailService, UserService}
-import socket.IotSocketActor
-import com.google.inject._
-import play.api._
-import play.api.mvc._
-import authenticate.TokenAuthenticateAction
-import play.api.libs.streams.ActorFlow
 import akka.actor.ActorSystem
 import akka.stream.Materializer
+import authenticate.TokenAuthenticateAction
+import com.google.inject._
+import controllers.socket.IotSocketActor
+import play.api.libs.streams.ActorFlow
+import services.{AuthTokenService, UserService}
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.PasswordHasherRegistry
-import com.mohiva.play.silhouette.impl.providers._
-import play.api.i18n.I18nSupport
-import play.api.mvc.{
-  AbstractController,
-  AnyContent,
-  ControllerComponents,
-  Request
-}
-
+import play.api.mvc._
 import utils.auth.DefaultEnv
-
-import scala.concurrent.{ExecutionContext, Future}
 /**
   * This controller creates an `Action` to handle HTTP requests to the
   * application's home page.

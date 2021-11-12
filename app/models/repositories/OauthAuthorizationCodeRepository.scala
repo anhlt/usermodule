@@ -1,28 +1,15 @@
 package models.repositories
 
-import scala.concurrent.{Future, ExecutionContext}
-import scala.reflect.ClassTag
 import com.google.inject._
-import java.util.UUID
-
-import db.TableDefinitions
-import db.{
-  DBUser,
-  DBLoginInfo,
-  DBUserLoginInfo,
-  DBPasswordInfo,
-  DBOauthClient,
-  DBOauthAccessToken
-}
+import db.{DBOauthAuthorizationCode, TableDefinitions}
 import models.entities.User
-import java.security.SecureRandom
-import scala.util.Random
 import org.joda.time.DateTime
+
+import java.security.SecureRandom
+import java.util.UUID
 import java.{util => ju}
-import scalaoauth2.provider.AccessToken
-import scalaoauth2.provider.AuthInfo
-import com.mohiva.play.silhouette.api.LoginInfo
-import db.DBOauthAuthorizationCode
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Random
 
 trait OauthAuthorizationCodeRepository {
 

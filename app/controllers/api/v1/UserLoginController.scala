@@ -7,22 +7,17 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Clock, Credentials}
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers._
+import controllers.AbstractAuthController
+import forms.BaseForm._
 import forms.SignInForm
-import javax.inject.Inject
 import play.api.Configuration
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
-import play.api.mvc.{
-  AbstractController,
-  AnyContent,
-  ControllerComponents,
-  Request
-}
+import play.api.mvc.{AnyContent, ControllerComponents, Request}
 import utils.auth.DefaultEnv
-import forms.BaseForm._
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import controllers.AbstractAuthController
 
 /**
   * The `Sign Up` controller.

@@ -1,12 +1,9 @@
 package models.repositories
 
-import scala.concurrent.{Future, ExecutionContext}
-import scala.reflect.ClassTag
 import com.google.inject._
-import java.util.UUID
+import db.{DBOauthClient, TableDefinitions}
 
-import db.TableDefinitions
-import db.{DBUser, DBLoginInfo, DBUserLoginInfo, DBPasswordInfo, DBOauthClient}
+import scala.concurrent.{ExecutionContext, Future}
 
 trait OauthClientRepository {
 

@@ -2,33 +2,20 @@ package controllers.api.v1
 
 import com.google.inject._
 import com.mohiva.play.silhouette.api._
-import com.mohiva.play.silhouette.impl.providers._
-import utils.auth.DefaultEnv
-import scala.concurrent.Future
-import play.api._
-import play.api.mvc._
-import play.api.mvc.{
-  AbstractController,
-  AnyContent,
-  ControllerComponents,
-  Request
-}
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
-import play.api.libs.json._
+import forms.BaseForm._
+import forms.ClientAuthorizeForm
+import models.entities.User
+import models.repositories.{OauthAuthorizationCodeRepository, OauthClientRepository}
+import play.api.Logging
+import play.api.libs.json.Json
+import play.api.mvc.{AbstractController, ControllerComponents}
+import utils.auth.DefaultEnv
 import utils.response.JsonWriters._
 import utils.response._
-import java.util.UUID
-import models.repositories.{
-  OauthClientRepository,
-  OauthAuthorizationCodeRepository
-}
-import scala.concurrent.ExecutionContext
-import play.api.Logging
-import forms.ClientAuthorizeForm
-import forms.BaseForm._
-import play.api.libs.json.{JsValue, Json, Writes}
-import models.entities.User
+
 import java.net.URI
+import scala.concurrent.{ExecutionContext, Future}
 // client_id=773
 // redirect_uri=http:%2F%2Flocalhost%2Fmendeley%2Fserver_sample.php
 // response_type=code

@@ -1,25 +1,12 @@
 package controllers
 
 
-import services.{MyTokenEndpoint, Oauth2DataHandler}
-import models._
-import play.api._
-import play.api.data._
-import play.api.data.Forms._
-import play.api.mvc._
-import play.api.Play._
-import play.api.mvc.BodyParsers._
-import play.api.libs.json.Json
-import play.api.libs.json.Json._
 import com.google.inject._
-import play.api.mvc.{
-  AbstractController,
-  AnyContent,
-  ControllerComponents,
-  Request
-}
-import scalaoauth2.provider.OAuth2Provider
-import scalaoauth2.provider.TokenEndpoint
+import play.api.libs.json.Json
+import play.api.mvc.{AbstractController, ControllerComponents}
+import scalaoauth2.provider.{OAuth2Provider, TokenEndpoint}
+import services.{MyTokenEndpoint, Oauth2DataHandler}
+
 import scala.concurrent.ExecutionContext
 
 class OAuth2Controller @Inject()(
