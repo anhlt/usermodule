@@ -27,22 +27,22 @@ class OauthAuthorizationCodeRepositoryImpl @Inject()(
     ex: ExecutionContext
 ) extends OauthAuthorizationCodeRepository {
 
-  implicit val exc = ex
+  implicit val exc: ExecutionContext = ex
   import tableDefinations._
   import tableDefinations.dbConfiguration.driver.api._
 
   def delete(codeValue: String): Future[Unit] = {
 
     val query = (for {
-      authCode <- slickSAuthorizationCodes filter ({ code =>
+      authCode <- slickSAuthorizationCodes filter { code =>
         code.code === codeValue
-      })
+      }
     } yield authCode).delete
 
     db.run(query).map(_ => {})
   }
 
-  def randomString(len: Int) =
+  def randomString(len: Int): String =
     new Random(new SecureRandom()).alphanumeric.take(len).mkString
 
   override def create(
@@ -59,10 +59,10 @@ class OauthAuthorizationCodeRepositoryImpl @Inject()(
       createdAt = new DateTime()
     )
 
-    val action = (for {
+    val action = for {
       _ <- slickSAuthorizationCodes += authorizationCode
 
-    } yield ())
+    } yield ()
 
     db.run(action).map(_ => authorizationCode)
 

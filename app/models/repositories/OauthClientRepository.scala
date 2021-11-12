@@ -30,7 +30,7 @@ class OauthClientRepositoryImpl @Inject()(
     ex: ExecutionContext
 ) extends OauthClientRepository {
 
-  implicit val exc = ex
+  implicit val exc: ExecutionContext = ex
   import tableDefinations._
   import tableDefinations.dbConfiguration.driver.api._
 

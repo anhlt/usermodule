@@ -10,7 +10,7 @@ object CustomProfile extends PostgresProfile{
   override val columnTypes = new JdbcTypes
 
   class JdbcTypes extends super.JdbcTypes {
-    override val uuidJdbcType = new UUIDJdbcType {
+    override val uuidJdbcType: UUIDJdbcType = new UUIDJdbcType {
       override def sqlTypeName(sym: Option[FieldSymbol]) = "UUID"
       override def valueToSQLLiteral(value: UUID) = "'" + value + "'"
       override def hasLiteralForm = true

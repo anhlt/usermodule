@@ -3,7 +3,7 @@ package controllers
 
 import com.google.inject._
 import play.api.libs.json.Json
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import scalaoauth2.provider.{OAuth2Provider, TokenEndpoint}
 import services.{MyTokenEndpoint, Oauth2DataHandler}
 
@@ -17,7 +17,7 @@ class OAuth2Controller @Inject()(
     with OAuth2Provider {
 
   override val tokenEndpoint: TokenEndpoint = MyTokenEndpoint
-  def accessToken = Action.async { implicit request =>
+  def accessToken: Action[AnyContent] = Action.async { implicit request =>
     tokenEndpoint.handleRequest(request, oauth2DataHandler).map {
       case Left(e) =>
         new Status(e.statusCode)(responseOAuthErrorJson(e))

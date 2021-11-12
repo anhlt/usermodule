@@ -38,7 +38,7 @@ class AccessTokenRepositoryImpl @Inject()(
     ex: ExecutionContext
 ) extends AccessTokenRepository {
 
-  implicit val exc = ex
+  implicit val exc: ExecutionContext = ex
   import tableDefinations._
   import tableDefinations.dbConfiguration.driver.api._
 
@@ -47,7 +47,7 @@ class AccessTokenRepositoryImpl @Inject()(
       dbAccessToken: DBOauthAccessToken
   ) {
 
-    def toEntity =
+    def toEntity: AccessToken =
       AccessToken(
         dbAccessToken.accessToken,
         Some(dbAccessToken.refreshToken),
@@ -74,10 +74,10 @@ class AccessTokenRepositoryImpl @Inject()(
       createdAt = new DateTime()
     )
 
-    val action = (for {
+    val action = for {
       _ <- slickSAccessTokenTable += accessToken
 
-    } yield ())
+    } yield ()
 
     db.run(action).map(_ => accessToken.toEntity)
   }
@@ -89,13 +89,13 @@ class AccessTokenRepositoryImpl @Inject()(
     // TODO: check sql
 
     val selectQuery = for {
-      (token, client) <- slickSAccessTokenTable join slickSClients on (_.oauthClientId === _.id) filter ({
+      (token, client) <- slickSAccessTokenTable join slickSClients on (_.oauthClientId === _.id) filter {
         case (
             token,
             client
             ) =>
           client.clientId === client.clientId
-      })
+      }
     } yield token.id
 
     val deleteQuery =
@@ -131,13 +131,13 @@ class AccessTokenRepositoryImpl @Inject()(
     // TODO: check sql
 
     db.run((for {
-        (token, client) <- slickSAccessTokenTable join slickSClients on (_.oauthClientId === _.id) filter ({
+        (token, client) <- slickSAccessTokenTable join slickSClients on (_.oauthClientId === _.id) filter {
           case (
               token,
               client
               ) =>
             client.clientId === clientId
-        })
+        }
       } yield token).result.headOption)
       .collect({
         case x => x.map(_.toEntity)

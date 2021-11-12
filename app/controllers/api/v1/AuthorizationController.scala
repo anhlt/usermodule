@@ -9,7 +9,7 @@ import models.entities.User
 import models.repositories.{OauthAuthorizationCodeRepository, OauthClientRepository}
 import play.api.Logging
 import play.api.libs.json.Json
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import utils.auth.DefaultEnv
 import utils.response.JsonWriters._
 import utils.response._
@@ -36,7 +36,7 @@ class AuthorizationController @Inject()(
       redirect_uri: String,
       response_type: String,
       state: Option[String]
-  ) =
+  ): Action[AnyContent] =
     silhouette.SecuredAction.async({
       implicit request: SecuredRequest[
         DefaultEnv,
@@ -44,39 +44,36 @@ class AuthorizationController @Inject()(
       ] =>
         oauthClientRepository
           .findByIdAndRedirectUri(client_id, redirect_uri)
-          .map({ maybeClient =>
-            maybeClient match {
-              case Some(client) =>
-                Ok(
-                  Json.toJson(
-                    InstanceRespone(
-                      OauthClientResponse(
-                        client.clientName,
-                        client.clientDescription
-                      )
+          .map({
+            case Some(client) =>
+              Ok(
+                Json.toJson(
+                  InstanceRespone(
+                    OauthClientResponse(
+                      client.clientName,
+                      client.clientDescription
                     )
                   )
                 )
+              )
 
-              case None =>
-                NotFound(
-                  Json
-                    .obj("message" -> "Not Found")
-                )
-            }
-
+            case None =>
+              NotFound(
+                Json
+                  .obj("message" -> "Not Found")
+              )
           })
     })
 
   def uri(url: String, code: String, state: Option[String]): URI = {
     val enc = (p: String) => java.net.URLEncoder.encode(p, "utf-8")
     new java.net.URI(
-      if (state.isDefined) s"${url}?code=${code}&state=${state.get}"
-      else s"${url}?code=${code}"
+      if (state.isDefined) s"$url?code=$code&state=${state.get}"
+      else s"$url?code=$code"
     )
   }
 
-  def authorize =
+  def authorize: Action[AnyContent] =
     silhouette.SecuredAction.async {
       implicit request: SecuredRequest[DefaultEnv, play.api.mvc.AnyContent] =>
         ClientAuthorizeForm.form
@@ -93,7 +90,7 @@ class AuthorizationController @Inject()(
                   data.redirect_uri.getOrElse("")
                 )
                 .flatMap({
-                  case Some(client) => {
+                  case Some(client) =>
                     oauthAuthorizationCodeRepository
                       .create(currentUser, client.id, data.redirect_uri)
                       .map(
@@ -114,7 +111,6 @@ class AuthorizationController @Inject()(
                             )
                           )
                       )
-                  }
                   case None =>
                     Future.successful(
                       NotFound(

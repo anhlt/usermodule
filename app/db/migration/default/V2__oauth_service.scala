@@ -5,16 +5,17 @@ import db.base.CustomProfile
 import db.base.CustomProfile.api._
 import org.flywaydb.core.api.migration.{BaseJavaMigration, Context}
 import org.joda.time._
+import slick.jdbc.JdbcProfile
 import slick.migration.api._
 
 import java.util.UUID
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor}
 import scala.concurrent.duration._
 
 class V2__oauth_service extends BaseJavaMigration {
 
-  implicit val dialect = GenericDialect(CustomProfile)
-  lazy val db = Database.forConfig("db.default")
+  implicit val dialect: Dialect[_ <: JdbcProfile] = GenericDialect(CustomProfile)
+  lazy val db: CustomProfile.backend.Database = Database.forConfig("db.default")
 
   case class ServerOauthClient(
       id: UUID,
@@ -159,7 +160,7 @@ class V2__oauth_service extends BaseJavaMigration {
   )
 
   def migrate(context: Context): Unit = {
-    implicit val ec = ExecutionContext.global
+    implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
     val actions = (for {
       _ <- m1()

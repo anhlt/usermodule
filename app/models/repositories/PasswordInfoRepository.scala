@@ -16,11 +16,11 @@ class PasswordInfoRepository @Inject()(
     val classTag: ClassTag[PasswordInfo]
 ) extends DelegableAuthInfoDAO[PasswordInfo] {
 
-  implicit val exc = ex
+  implicit val exc: ExecutionContext = ex
   import tableDefinations._
   import tableDefinations.dbConfiguration.driver.api._
 
-  protected def passwordInfoQuery(loginInfo: LoginInfo) =
+  protected def passwordInfoQuery(loginInfo: LoginInfo): Query[tableDefinations.PasswordInfos, DBPasswordInfo, Seq] =
     for {
       dbLoginInfo <- loginInfoQuery(loginInfo)
       dbPasswordInfo <- slickPasswordInfos
@@ -29,7 +29,7 @@ class PasswordInfoRepository @Inject()(
 
   // Use subquery workaround instead of join to get authinfo because slick only supports selecting
   // from a single table for update/delete queries (https://github.com/slick/slick/issues/684).
-  protected def passwordInfoSubQuery(loginInfo: LoginInfo) =
+  protected def passwordInfoSubQuery(loginInfo: LoginInfo): Query[tableDefinations.PasswordInfos, DBPasswordInfo, Seq] =
     slickPasswordInfos.filter(
       _.loginInfoId in loginInfoQuery(loginInfo).map(_.id)
     )

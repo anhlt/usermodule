@@ -10,7 +10,7 @@ import forms.SignUpForm
 import models.entities.User
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
-import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request}
 import utils.auth.DefaultEnv
 
 import java.{util => ju}
@@ -25,7 +25,6 @@ import scala.concurrent.{ExecutionContext, Future}
   * @param userService            The user service implementation.
   * @param authInfoRepository     The auth info repository implementation.
   * @param authTokenService       The auth token service implementation.
-  * @param avatarService          The avatar service implementation.
   * @param passwordHasherRegistry The password hasher registry.
   * @param mailService           The mailer service.
   * @param ex                     The execution context.
@@ -47,9 +46,9 @@ class UserRegisterController @Inject()(
     *
     * @return The result to display.
     */
-  def submit = silhouette.UnsecuredAction.async {
+  def submit: Action[AnyContent] = silhouette.UnsecuredAction.async {
     implicit request: Request[AnyContent] =>
-      SignUpForm.form.bindFromRequest.fold(
+      SignUpForm.form.bindFromRequest().fold(
         formWithError =>
           Future.successful(BadRequest(Json.toJson(formWithError.errors))),
         data => {
