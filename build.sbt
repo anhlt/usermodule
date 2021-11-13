@@ -1,5 +1,8 @@
-import scala.tools.nsc.doc.html.Doclet
 import Deps._
+
+
+lazy val db = Project("common", file("libs/common")).settings()
+
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, JavaAppPackaging)
   .settings(
@@ -45,7 +48,8 @@ lazy val root = (project in file("."))
     ),
     Compile / run / fork := true,
     Compile / run / javaOptions += "-Dhttp.address=0.0.0.0"
-  )
+  ).dependsOn(db)
+
 
 lazy val localPackage = project
   .in(file("build/local"))
@@ -67,13 +71,14 @@ lazy val localPackage = project
   )
   .dependsOn(root)
 
-
 lazy val stagePackage = project
   .in(file("build/stage"))
   .enablePlugins(PlayScala, JavaAppPackaging, DockerPlugin)
   .settings(
-    Docker / packageName := sys.env.get("DOCKER_REPOSITORY").getOrElse("usermodule") ,
-    Docker / version := sys.env.get("DOCKER_VERSION").getOrElse("staging") ,
+    Docker / packageName := sys.env
+      .get("DOCKER_REPOSITORY")
+      .getOrElse("usermodule"),
+    Docker / version := sys.env.get("DOCKER_VERSION").getOrElse("staging"),
     ThisBuild / dockerRepository := sys.env.get("DOCKER_IMAGE_HOST"),
     ThisBuild / dockerUsername := sys.env.get("DOCKER_USERNAME"),
     Compile / resourceDirectory := (resourceDirectory in (root, Compile)).value,
@@ -84,16 +89,5 @@ lazy val stagePackage = project
       "-Dpidfile.path=/dev/null"
     ),
     dockerBaseImage := "adoptopenjdk/openjdk11:debian-slim"
-  )
-  .dependsOn(root)
-
-lazy val prodPackage = project
-  .in(file("build/prod"))
-  .enablePlugins(PlayScala, JavaAppPackaging)
-  .settings(
-    Compile / resourceDirectory := (resourceDirectory in (root, Compile)).value,
-    Universal / mappings += {
-      ((Compile / resourceDirectory).value / "application.prod.conf") -> "conf/application.conf"
-    }
   )
   .dependsOn(root)

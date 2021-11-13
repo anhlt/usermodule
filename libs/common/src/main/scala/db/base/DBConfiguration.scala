@@ -8,7 +8,7 @@ trait DBConfiguration {
 
   import driver.api._
 
-  lazy val db: Database = Database.forConfig("db.default")
+  val db: Database
 }
 
 

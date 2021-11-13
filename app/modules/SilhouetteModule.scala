@@ -1,6 +1,5 @@
 package modules
 
-
 import services.{
   UserService,
   UserServiceImpl,
@@ -86,7 +85,13 @@ class SilhouetteModule extends AbstractModule {
     bind(classOf[Clock]).toInstance(Clock())
 
     bind(classOf[DBConfiguration]).toInstance(new DBConfiguration {
+
       override val driver = CustomProfile
+
+      import driver.api._
+
+      override val db: Database = Database.forConfig("db.default")
+
     })
     bind(classOf[TableDefinitions])
 
@@ -176,6 +181,3 @@ class SilhouetteModule extends AbstractModule {
   }
 
 }
-
-  
-  
