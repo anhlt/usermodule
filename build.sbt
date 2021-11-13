@@ -1,7 +1,10 @@
 import Deps._
 
+lazy val common = Project("common", file("libs/common")).settings()
 
-lazy val db = Project("common", file("libs/common")).settings()
+lazy val deviceManager = Project("deviceManager", file("libs/device"))
+  .dependsOn(common)
+  .enablePlugins(PlayScala)
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, JavaAppPackaging)
@@ -48,8 +51,9 @@ lazy val root = (project in file("."))
     ),
     Compile / run / fork := true,
     Compile / run / javaOptions += "-Dhttp.address=0.0.0.0"
-  ).dependsOn(db)
-
+  )
+  .dependsOn(common, deviceManager)
+  .aggregate(common, deviceManager)
 
 lazy val localPackage = project
   .in(file("build/local"))

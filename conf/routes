@@ -21,5 +21,6 @@ GET         /account/activate/:token         controllers.ActivateAccountControll
 POST        /oauth2/access_token             controllers.OAuth2Controller.accessToken
 
 ->          /api/v1                          api.v1.Routes
+->          /device                          device.Routes
 
 GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
