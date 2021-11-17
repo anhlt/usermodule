@@ -2,12 +2,7 @@ package modules
 
 import services.{
   UserService,
-  UserServiceImpl,
-  AuthTokenService,
-  AuthTokenServiceImpl,
-  MailService,
-  DumpMailService,
-  SMTPMailService
+  UserServiceImpl
 }
 import com.google.inject._
 import com.google.inject.name.Named
@@ -24,25 +19,11 @@ import com.mohiva.play.silhouette.api.{
 import com.mohiva.play.silhouette.crypto.{
   JcaCrypter,
   JcaCrypterSettings,
-  JcaSigner,
-  JcaSignerSettings
 }
 import com.mohiva.play.silhouette.impl.authenticators._
-import com.mohiva.play.silhouette.impl.providers._
-import com.mohiva.play.silhouette.impl.providers.oauth1._
-import com.mohiva.play.silhouette.impl.providers.oauth1.secrets.{
-  CookieSecretProvider,
-  CookieSecretSettings
-}
-import com.mohiva.play.silhouette.impl.providers.oauth1.services.PlayOAuth1Service
-import com.mohiva.play.silhouette.impl.providers.oauth2._
-import com.mohiva.play.silhouette.impl.providers.state.{
-  CsrfStateItemHandler,
-  CsrfStateSettings
-}
+
 import com.mohiva.play.silhouette.api.actions._
 
-import com.mohiva.play.silhouette.impl.services._
 import com.mohiva.play.silhouette.impl.util._
 import com.mohiva.play.silhouette.password.{
   BCryptPasswordHasher,
@@ -54,23 +35,21 @@ import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.ceedubs.ficus.readers.EnumerationReader._
 import net.ceedubs.ficus.readers.ValueReader
-import com.typesafe.config.{Config}
+
 import models.repositories.{
   UserRepository,
   PasswordInfoRepository,
   UserRepositoryImp
 }
 
-import play.api.{Configuration}
+import play.api.Configuration
 
 import play.api.libs.ws.WSClient
-import play.api.mvc.Cookie
 import utils.auth.DefaultEnv
 import scala.concurrent.ExecutionContext.Implicits.global
 import db.base.{DBConfiguration, CustomProfile}
 
-import db.{TableDefinitions}
-import akka.actor.ActorSystem
+import db.TableDefinitions
 import scala.concurrent.ExecutionContext
 
 class SilhouetteModule extends AbstractModule {

@@ -28,7 +28,6 @@ lazy val root = (project in file("."))
           jodaConvert,
           jodaTime,
           jdbc,
-          mysql,
           postgresql,
           scalaTestPlay,
           flyway,

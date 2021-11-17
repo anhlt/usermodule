@@ -1,15 +1,25 @@
-name := """device"""
+import Deps._
+
+name := """device-manager"""
 organization := "com.example"
 
 version := "1.0-SNAPSHOT"
-
 
 scalaVersion := "2.13.7"
 
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 
-
+libraryDependencies ++= Seq(
+  guice,
+  postgresql,
+  silhouette,
+  silhouetteBcrypt,
+  silhouetteCrypto,
+  silhouettePersistence,
+  silhouetteTotp,
+  ficus
+)
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"
 
