@@ -7,17 +7,10 @@ import com.mohiva.play.silhouette.api.util._
 import com.mohiva.play.silhouette.api.{Environment, EventBus, Silhouette, SilhouetteProvider}
 import utils.auth.DefaultEnv
 
-class SilhouetteModule extends AbstractModule {
-
-  override def configure(): Unit = {
-    bind(classOf[EventBus]).toInstance(EventBus())
-    bind(classOf[Clock]).toInstance(Clock())
-  }
-
-
+class DeviceSilhouetteModule extends AbstractModule {
 
   @Provides
-  @Named("RedToothPick")
+  @Named("DeviceSilhouetteProvider")
   def provideSilhouette(
       env: Environment[DefaultEnv],
       securedAction: SecuredAction,
