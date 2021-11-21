@@ -17,25 +17,11 @@ class V1_2__new extends BaseJavaMigration {
   implicit val dialect = GenericDialect(CustomProfile)
   lazy val db = Database.forConfig("db.default")
 
-  abstract class BaseTable[E <: Entity: ClassTag](
-      tag: Tag,
-      tableName: String,
-      schemaName: Option[String] = None
-  ) extends Table[E](tag, schemaName, tableName) {
-
-    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
-    val createdAt =
-      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
-    val updatedAt = column[DateTime](
-      "updated_date",
-      O.SqlType("timestamp default now()")
-    )
-  }
 
   class UserTable(tag: Tag)
       extends Table[(UUID, String, Boolean, DateTime, DateTime)](tag, "users") {
 
-    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
+    val id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
     val email = column[String]("email")
     val activated = column[Boolean]("activated")
     val createdAt =
@@ -48,17 +34,15 @@ class V1_2__new extends BaseJavaMigration {
     def * = (id, email, activated, createdAt, updatedAt)
   }
 
-  class LoginInfos(tag: Tag) extends BaseTable[DBLoginInfo](tag, "logininfo") {
+  class LoginInfos(tag: Tag)
+      extends Table[(UUID, String, String, DateTime, DateTime)](
+        tag,
+        "logininfo"
+      ) {
+    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
+
     def providerID = column[String]("providerID")
     def providerKey = column[String]("providerKey")
-    def * =
-      (id, providerID, providerKey, createdAt, updatedAt) <> (DBLoginInfo.tupled, DBLoginInfo.unapply)
-  }
-
-  class UserLoginInfos(tag: Tag)
-      extends Table[DBUserLoginInfo](tag, "userlogininfo") {
-    def userID = column[UUID]("userID", O.SqlType("varchar(255)"))
-    def loginInfoId = column[UUID]("loginInfoId", O.SqlType("varchar(255)"))
     def createdAt =
       column[DateTime]("created_date", O.SqlType("timestamp default now()"))
     def updatedAt = column[DateTime](
@@ -66,11 +50,36 @@ class V1_2__new extends BaseJavaMigration {
       O.SqlType("timestamp default now()")
     )
     def * =
-      (userID, loginInfoId, createdAt, updatedAt) <> (DBUserLoginInfo.tupled, DBUserLoginInfo.unapply)
+      (id, providerID, providerKey, createdAt, updatedAt)
+  }
+
+  class UserLoginInfos(tag: Tag)
+      extends Table[(UUID, UUID, UUID, DateTime, DateTime)](
+        tag,
+        "userlogininfo"
+      ) {
+
+    val id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
+
+    val userID = column[UUID]("userID", O.SqlType("varchar(255)"))
+    val loginInfoId = column[UUID]("loginInfoId", O.SqlType("varchar(255)"))
+    val createdAt =
+      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
+    val updatedAt = column[DateTime](
+      "updated_date",
+      O.SqlType("timestamp default now()")
+    )
+    def * =
+      (id, userID, loginInfoId, createdAt, updatedAt)
   }
 
   class PasswordInfos(tag: Tag)
-      extends Table[DBPasswordInfo](tag, "passwordinfo") {
+      extends Table[
+        (UUID, String, String, Option[String], UUID, DateTime, DateTime)
+      ](tag, "passwordinfo") {
+
+    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
+
     def hasher = column[String]("hasher")
     def password = column[String]("password")
     def salt = column[Option[String]]("salt")
@@ -80,25 +89,54 @@ class V1_2__new extends BaseJavaMigration {
     def updatedAt =
       column[DateTime]("updated_date", O.SqlType("timestamp default now()"))
     def * =
-      (hasher, password, salt, loginInfoId, createdAt, updatedAt) <> (DBPasswordInfo.tupled, DBPasswordInfo.unapply)
+      (id, hasher, password, salt, loginInfoId, createdAt, updatedAt)
   }
 
   class OAuth1Infos(tag: Tag)
-      extends BaseTable[DBOAuth1Info](tag, "oauth1info") {
+      extends Table[(UUID, String, String, UUID, DateTime, DateTime)](
+        tag,
+        "oauth1info"
+      ) {
+
+    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
+
     def token = column[String]("token")
     def secret = column[String]("secret")
     def loginInfoId = column[UUID]("loginInfoId", O.SqlType("varchar(255)"))
+    def createdAt =
+      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
+    def updatedAt =
+      column[DateTime]("updated_date", O.SqlType("timestamp default now()"))
     def * =
-      (id, token, secret, loginInfoId, createdAt, updatedAt) <> (DBOAuth1Info.tupled, DBOAuth1Info.unapply)
+      (id, token, secret, loginInfoId, createdAt, updatedAt)
   }
 
   class OAuth2Infos(tag: Tag)
-      extends BaseTable[DBOAuth2Info](tag, "oauth2info") {
+      extends Table[
+        (
+            UUID,
+            String,
+            Option[String],
+            Option[Int],
+            Option[String],
+            UUID,
+            DateTime,
+            DateTime
+        )
+      ](tag, "oauth2info") {
+
+    def id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
     def accessToken = column[String]("accesstoken")
     def tokenType = column[Option[String]]("tokentype")
     def expiresIn = column[Option[Int]]("expiresin")
     def refreshToken = column[Option[String]]("refreshtoken")
     def loginInfoId = column[UUID]("logininfoid", O.SqlType("varchar(255)"))
+
+    def createdAt =
+      column[DateTime]("created_date", O.SqlType("timestamp default now()"))
+    def updatedAt =
+      column[DateTime]("updated_date", O.SqlType("timestamp default now()"))
+
     def * =
       (
         id,
@@ -109,7 +147,7 @@ class V1_2__new extends BaseJavaMigration {
         loginInfoId,
         createdAt,
         updatedAt
-      ) <> (DBOAuth2Info.tupled, DBOAuth2Info.unapply)
+      )
   }
 
   val userTable = TableQuery[UserTable]
@@ -182,15 +220,6 @@ class V1_2__new extends BaseJavaMigration {
       _ <- m9()
     } yield ()).transactionally
 
-    // db.run(m1())
-    // db.run(m2())
-    // db.run(m3())
-    // db.run(m4())
-    // db.run(m5())
-    // db.run(m6())
-    // db.run(m7())
-    // db.run(m8())
-    // db.run(m9())
     val rs = db.run(actions)
 
     Await.result(rs, 10 seconds)

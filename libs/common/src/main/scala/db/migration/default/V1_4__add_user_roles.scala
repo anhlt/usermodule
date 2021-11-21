@@ -1,7 +1,6 @@
 package db.migration.default
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
-import db.DBUserRoles
 import db.base.CustomProfile
 import db.base.CustomProfile.api._
 import org.flywaydb.core.api.migration.{BaseJavaMigration, Context}
@@ -14,10 +13,13 @@ import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor}
 import scala.concurrent.duration._
 
 class V1_4__add_user_roles extends BaseJavaMigration {
-  implicit val dialect: Dialect[_ <: JdbcProfile] = GenericDialect(CustomProfile)
+  implicit val dialect: Dialect[_ <: JdbcProfile] = GenericDialect(
+    CustomProfile
+  )
   lazy val db: CustomProfile.backend.Database = Database.forConfig("db.default")
 
-  class UserRoles(tag: Tag) extends Table[DBUserRoles](tag, "user_roles") {
+  class UserRoles(tag: Tag)
+      extends Table[(UUID, String, DateTime, DateTime)](tag, "user_roles") {
     def userId = column[UUID]("user_id", O.SqlType("varchar(255)"))
     def role = column[String]("role", O.SqlType("varchar(255)"))
     val createdAt =
@@ -27,7 +29,7 @@ class V1_4__add_user_roles extends BaseJavaMigration {
       O.SqlType("timestamp default now()")
     )
     def * =
-      (userId, role, createdAt, updatedAt) <> (DBUserRoles.tupled, DBUserRoles.unapply)
+      (userId, role, createdAt, updatedAt)
   }
 
   val authTokenTable = TableQuery[UserRoles]

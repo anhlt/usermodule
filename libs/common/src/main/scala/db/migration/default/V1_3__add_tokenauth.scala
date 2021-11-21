@@ -1,7 +1,6 @@
 package db.migration.default
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
-import db.AuthToken
 import db.base.CustomProfile
 import db.base.CustomProfile.api._
 import org.flywaydb.core.api.migration.{BaseJavaMigration, Context}
@@ -15,15 +14,19 @@ import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor}
 import scala.concurrent.duration._
 
 class V1_3__add_tokenauth extends BaseJavaMigration {
-  implicit val dialect: Dialect[_ <: JdbcProfile] = GenericDialect(CustomProfile)
+  implicit val dialect: Dialect[_ <: JdbcProfile] = GenericDialect(
+    CustomProfile
+  )
   lazy val db: CustomProfile.backend.Database = Database.forConfig("db.default")
 
-  class AuthTokens(tag: Tag) extends Table[AuthToken](tag, "auth_token") {
+  class AuthTokens(tag: Tag)
+      extends Table[(UUID, UUID, DateTime)](tag, "auth_token") {
 
-    def token: Rep[UUID] = column[UUID]("token", O.PrimaryKey, O.SqlType("varchar(255)"))
+    def token: Rep[UUID] =
+      column[UUID]("token", O.PrimaryKey, O.SqlType("varchar(255)"))
     def userId: Rep[UUID] = column[UUID]("user_id", O.SqlType("varchar(255)"))
     def expiry: Rep[DateTime] = column[DateTime]("expiry")
-    def * : ProvenShape[AuthToken] = (token, userId, expiry) <> (AuthToken.tupled, AuthToken.unapply)
+    def * : ProvenShape[(UUID, UUID, DateTime)] = (token, userId, expiry)
   }
 
   class UserTable(tag: Tag)

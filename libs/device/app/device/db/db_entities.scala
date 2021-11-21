@@ -19,6 +19,7 @@ case class DBDeviceInstance(
 ) extends Entity
 
 case class DBDeviceOwner(
+    id: UUID,
     userID: UUID,
     deviceInstanceID: UUID,
     updatedAt: DateTime = new DateTime(),
