@@ -6,4 +6,18 @@
 # An example controller showing a sample home page
 GET     /                           device.controllers.HomeController.index()
 
+###
+#  summary: get user infomation
+#  tags:
+#    - DeviceManager
+#  security:
+#    - Bearer: []
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/models.entities.User'
+###
+GET     /api/device                 device.controllers.api.v1.DeviceController.user()
+
 
