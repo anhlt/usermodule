@@ -3,11 +3,28 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# An example controller showing a sample home page
-GET     /                           device.controllers.HomeController.index()
 
 ###
-#  summary: get user infomation
+#  summary: Register new device
+#  tags:
+#    - DeviceManager
+#  parameters:
+#    - name: body
+#      schema:
+#        $ref: '#/definitions/device.forms.DeviceRegisterForm.DeviceRegisterData'
+#  security:
+#    - Bearer: []
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/device.models.entities.Device.DeviceInstance'
+###
+POST    /api/device_register        device.controllers.api.v1.DeviceController.registerDevice()
+
+
+###
+#  summary: Get add device belong to user
 #  tags:
 #    - DeviceManager
 #  security:
@@ -16,8 +33,6 @@ GET     /                           device.controllers.HomeController.index()
 #    200:
 #      description: success
 #      schema:
-#        $ref: '#/definitions/models.entities.User'
+#        $ref: '#/definitions/device.models.entities.Device.DeviceInstance'
 ###
-GET     /api/device                 device.controllers.api.v1.DeviceController.user()
-
-
+GET     /api/devices                device.controllers.api.v1.DeviceController.devices()

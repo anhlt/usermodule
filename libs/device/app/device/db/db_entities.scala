@@ -6,6 +6,7 @@ import java.util.UUID
 
 case class DBDeviceModel(
     id: UUID,
+    name: String,
     desc: String,
     updatedAt: DateTime = new DateTime(),
     createdAt: DateTime = new DateTime()
@@ -22,6 +23,7 @@ case class DBDeviceOwner(
     id: UUID,
     userID: UUID,
     deviceInstanceID: UUID,
+    deviceNote: String,
     updatedAt: DateTime = new DateTime(),
     createdAt: DateTime = new DateTime()
 ) extends Entity

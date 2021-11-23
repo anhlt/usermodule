@@ -67,7 +67,7 @@ class V3_1__add_devices extends BaseJavaMigration {
       extends Table[DBDeviceInstance](tag, "device_instances") {
 
     val id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
-    val model = column[UUID]("model")
+    val model = column[UUID]("model", O.SqlType("varchar(255)"))
     val createdAt =
       column[DateTime]("created_date", O.SqlType("timestamp default now()"))
     val updatedAt = column[DateTime](
@@ -89,8 +89,9 @@ class V3_1__add_devices extends BaseJavaMigration {
       extends Table[DBDeviceOwner](tag, "device_owner") {
 
     val id = column[UUID]("id", O.PrimaryKey, O.SqlType("varchar(255)"))
-    val userID = column[UUID]("user_id")
-    val deviceInstanceID = column[UUID]("device_instance_id")
+    val userID = column[UUID]("user_id", O.SqlType("varchar(255)"))
+    val deviceInstanceID =
+      column[UUID]("device_instance_id", O.SqlType("varchar(255)"))
     val createdAt =
       column[DateTime]("created_date", O.SqlType("timestamp default now()"))
     val updatedAt = column[DateTime](

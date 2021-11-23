@@ -61,6 +61,8 @@ lazy val localPackage = project
     swaggerDomainNameSpaces := Seq(
       "models",
       "forms",
+      "device.forms",
+      "device.models.entities",
       "com.mohiva.play.silhouette.api"
     ),
     swaggerRoutesFile := "routes",

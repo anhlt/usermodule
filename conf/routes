@@ -4,6 +4,7 @@
 # ~~~~
 
 # An example controller showing a sample home page
+### NoDocs ###
 GET     /                           controllers.HomeController.index
 
 ### NoDocs ###
@@ -23,4 +24,5 @@ POST        /oauth2/access_token             controllers.OAuth2Controller.access
 ->          /api/v1                          api.v1.Routes
 ->          /device                          device.Routes
 
+### NoDocs ###
 GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)

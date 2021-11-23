@@ -18,10 +18,12 @@ class TableDefinitions @Inject()(
   class DeviceModelTable(tag: Tag)
       extends BaseTable[DBDeviceModel](tag, "device_models") {
     val desc = column[String]("desc")
+    val name = column[String]("name")
 
     def * =
       (
         id,
+        name,
         desc,
         createdAt,
         updatedAt
@@ -47,6 +49,7 @@ class TableDefinitions @Inject()(
       extends BaseTable[DBDeviceOwner](tag, "device_owner") {
 
     val userID = column[UUID]("user_id")
+    val deviceNote = column[String]("device_note")
     val deviceInstanceID = column[UUID]("device_instance_id")
 
     def * =
@@ -54,10 +57,15 @@ class TableDefinitions @Inject()(
         id,
         userID,
         deviceInstanceID,
+        deviceNote,
         createdAt,
         updatedAt
       ) <> (DBDeviceOwner.tupled, DBDeviceOwner.unapply)
 
   }
+
+  val slickDeviceModel = TableQuery[DeviceModelTable]
+  val slickDeviceInstance = TableQuery[DeviceInstanceTable]
+  val slickDeviceOwner = TableQuery[DeviceOwnerTable]
 
 }
