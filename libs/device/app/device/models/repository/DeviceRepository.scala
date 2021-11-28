@@ -5,10 +5,12 @@ import models.entities.User
 import device.models.entities.Device
 import scala.concurrent.Future
 import java.util.UUID
+import utils.response.PagingResponse
 
 trait DeviceRepository {
 
   def allDevice(user: User): Future[List[DeviceInstance]]
+  def allDevice(user: User, limit: Int, offset: Int): Future[PagingResponse[DeviceInstance]]
 
   def registerDevice(
       user: User,

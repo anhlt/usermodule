@@ -25,6 +25,17 @@ POST    /api/device_register        device.controllers.api.v1.DeviceController.r
 
 ###
 #  summary: Get add device belong to user
+#  parameters:
+#    - name: p
+#      required: false
+#    - in: query
+#      name: "p.offset"
+#      required: true
+#      description: Pager offset
+#    - in: query
+#      name: "p.limit"
+#      required: true
+#      description: Pager limit
 #  tags:
 #    - DeviceManager
 #  security:
@@ -33,6 +44,7 @@ POST    /api/device_register        device.controllers.api.v1.DeviceController.r
 #    200:
 #      description: success
 #      schema:
-#        $ref: '#/definitions/device.models.entities.Device.DeviceInstance'
+#        $ref: '#/definitions/utils.response.PagingResponse[device.models.entities.Device.DeviceInstance]'
+#        
 ###
-GET     /api/devices                device.controllers.api.v1.DeviceController.devices()
+GET     /api/devices                device.controllers.api.v1.DeviceController.devices(p: Pager)

@@ -3,6 +3,7 @@ import device.models.entities.Device
 
 import java.util.UUID
 import models.entities.User
+import utils.response.PagingResponse
 
 import scala.concurrent.Future
 import device.db.{
@@ -73,6 +74,44 @@ class DeviceRepositoryImpl @Inject()(
 
   def allDevice(user: User): Future[List[Device.DeviceInstance]] = {
 
+    val allUserDevice =
+      slickDeviceOwner.filter(_.userID === user.id).map(_.deviceInstanceID)
+
+    val query = for {
+      instance <- slickDeviceInstance.filter(_.id in allUserDevice)
+      owner <- slickDeviceOwner if instance.id === owner.deviceInstanceID
+      model <- slickDeviceModel if instance.model === model.id
+    } yield (instance, owner, model)
+
+    val values = db
+      .run(for {
+        records <- query.result
+        count <- query.length.result
+
+      } yield (records, count))
+      .map({
+        case (records, count) =>
+          PagingResponse(
+            records
+              .map({
+                case (i, o, m) =>
+                  Device.DeviceInstance(
+                    i.id,
+                    Device.DeviceModel(m.id, m.name, m.desc),
+                    o.id,
+                    o.deviceNote
+                  )
+
+              })
+              .toList,
+            count,
+            count - (1 + 1) > 0
+          )
+
+      })
+
+    println(values)
+
     val actions =
       (for {
         ((instance, owner), model) <- {
@@ -83,7 +122,7 @@ class DeviceRepositoryImpl @Inject()(
             case ((instanceTable, ownerTable), modelTable) =>
               instanceTable.model === modelTable.id
           }))
-        } if owner.userID === user.id
+        } if (instance.id in allUserDevice)
 
       } yield (instance, owner, model)).result
 
@@ -104,6 +143,47 @@ class DeviceRepositoryImpl @Inject()(
 
       })
 
+  }
+
+  def allDevice(
+      user: User,
+      limit: Int,
+      offset: Int
+  ): Future[PagingResponse[Device.DeviceInstance]] = {
+    val allUserDevice =
+      slickDeviceOwner.filter(_.userID === user.id).map(_.deviceInstanceID)
+
+    val query = for {
+      instance <- slickDeviceInstance.filter(_.id in allUserDevice)
+      owner <- slickDeviceOwner if instance.id === owner.deviceInstanceID
+      model <- slickDeviceModel if instance.model === model.id
+    } yield (instance, owner, model)
+
+    db.run(for {
+        records <- query.drop(offset).take(limit).result
+        count <- query.length.result
+
+      } yield (records, count))
+      .map({
+        case (records, count) =>
+          PagingResponse(
+            records
+              .map({
+                case (i, o, m) =>
+                  Device.DeviceInstance(
+                    i.id,
+                    Device.DeviceModel(m.id, m.name, m.desc),
+                    o.id,
+                    o.deviceNote
+                  )
+
+              })
+              .toList,
+            count,
+            count - (offset + limit) > 0
+          )
+
+      })
   }
 
   override def deregisterDevice(user: User, deviceID: UUID): Future[Unit] = ???

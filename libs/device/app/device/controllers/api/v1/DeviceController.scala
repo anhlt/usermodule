@@ -3,6 +3,10 @@ import com.google.inject._
 import com.google.inject.name.Named
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
+import device.forms.DeviceRegisterForm
+import device.models.repository.DeviceRepository
+import device.response.JsonWriters._
+import forms.BaseForm._
 import models.entities.User
 import play.api.libs.json._
 import play.api.mvc.{
@@ -13,15 +17,9 @@ import play.api.mvc.{
 }
 import utils.auth.DefaultEnv
 import utils.response.JsonWriters._
-import device.response.JsonWriters._
 import utils.response._
-import forms.BaseForm._
 
-import scala.concurrent.Future
-import device.models.repository.DeviceRepository
-import device.forms.DeviceRegisterForm
-import play.api.mvc.Request
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class DeviceController @Inject()(
     @Named("DeviceSilhouetteProvider") silhouette: Silhouette[DefaultEnv],
@@ -45,7 +43,12 @@ class DeviceController @Inject()(
               val user: User = request.identity
               (for {
                 device <- deviceRepository
-                  .registerDevice(user, data.modelID, data.instanceID, data.note)
+                  .registerDevice(
+                    user,
+                    data.modelID,
+                    data.instanceID,
+                    data.note
+                  )
               } yield ({
 
                 Ok(Json.toJson(device))
@@ -57,16 +60,18 @@ class DeviceController @Inject()(
 
     })
 
-  def devices: Action[AnyContent] =
+  def devices(p: params.binders.Pager): Action[AnyContent] =
     silhouette.SecuredAction.async({
       implicit request: SecuredRequest[
         DefaultEnv,
         play.api.mvc.AnyContent
       ] =>
         val user: User = request.identity
-        val devicesFuture = deviceRepository.allDevice(user)
-
-        devicesFuture.map(devices => Ok(Json.toJson(devices)))
+        val devicesFuture =
+              deviceRepository.allDevice(user, p.limit, p.offset)
+        devicesFuture.map(
+          devices => Ok(Json.toJson(devices))
+        )
 
     })
 }

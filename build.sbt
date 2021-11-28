@@ -4,6 +4,9 @@ lazy val common = Project("common", file("libs/common")).settings()
 
 lazy val deviceManager = Project("deviceManager", file("libs/device"))
   .dependsOn(common)
+  .settings(
+    routesImport ++= Seq("params.binders._")
+  )
   .enablePlugins(PlayScala)
 
 lazy val root = (project in file("."))
@@ -48,6 +51,8 @@ lazy val root = (project in file("."))
         )
       )
     ),
+    Compile / logLevel := Level.Debug,
+    Compile / routesImport ++= Seq("params.binders._"),
     Compile / run / fork := true,
     Compile / run / javaOptions += "-Dhttp.address=0.0.0.0"
   )
@@ -63,9 +68,11 @@ lazy val localPackage = project
       "forms",
       "device.forms",
       "device.models.entities",
-      "com.mohiva.play.silhouette.api"
+      "com.mohiva.play.silhouette.api",
+      "utils.response"
     ),
     swaggerRoutesFile := "routes",
+    routesImport += "params.binders._",
     Assets / WebKeys.exportedMappings := Nil,
     libraryDependencies ++= Seq(swaggerUI),
     routesGenerator := InjectedRoutesGenerator,
